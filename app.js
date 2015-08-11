@@ -23,6 +23,22 @@
                 templateUrl: 'content/home.view.html',
                 controllerAs: 'vm'
             })
+            .when('/content/:postId', {
+                controller: 'ContentController',
+                templateUrl: 'content/updatePost.view.html',
+                controllerAs: 'vm'
+            })
+            .when('/allcontent', {
+                controller: 'ContentController',
+                templateUrl: 'content/allcontent.view.html',
+                controllerAs: 'vm'
+            })
+            .when('/post/:postId', {
+                controller: 'ContentController',
+                templateUrl: 'content/post.view.html',
+                controllerAs: 'vm'
+            })
+
 
             .when('/login', {
                 controller: 'LoginController',

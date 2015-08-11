@@ -1,0 +1,30 @@
+﻿
+
+<div class="row">
+    <form ng-controller="GetPostController">
+
+        <div class="col-md-8">
+            <h1>{{postData.title}}</h1>
+            <div class="desc" ng-bind-html="postContent"></div>
+            <a href="#/content/{{postData.id}}">Edit Post</a>
+
+
+        </div>
+    </form>
+    </div>
+
+    <!-- /.row -->
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Footer</p>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </footer>
+

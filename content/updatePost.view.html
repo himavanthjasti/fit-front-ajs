@@ -1,0 +1,47 @@
+﻿
+<div class="row">
+    <form ng-controller="UpdateContentController">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8">
+            <input type="text" ng-model="postTitle" id="post_title" class="mt20 form-control input-lg flat-corner">
+            <div  text-angular ng-model="htmlVariable"></div>
+            <button ng-click="updatePost()">Update Post</button>
+        </div>
+
+        <!-- Blog Sidebar Widgets Column -->
+        <div class="col-md-4 sidebar-cust">
+            <div class="mt20">
+                <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
+                <input type="text" id="tags" class="tag-search">
+            </div>
+            <hr>
+            <div class="">
+                <h4 class="text-uppercase sidebar-h4 fw4">Guideliness</h4>
+                <div style="border:1px solid #ccc; padding: 10px;">
+                    <h5 class="sidebar-h5">Lorem Ipsum</h5>
+                    <p class="sidebar-p">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                    <h5 class="sidebar-h5">Title</h5>
+                    <p class="sidebar-p">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    </div>
+
+    <!-- /.row -->
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Footer</p>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </footer>
+
