@@ -6,14 +6,18 @@
         <div class="col-md-8">
             <input type="text" ng-model="postTitle" id="post_title" class="mt20 form-control input-lg flat-corner">
             <div text-angular ng-model="htmlVariable"></div>
+
             <button ng-click="createPost()">Submit</button>
         </div>
+
 
         <!-- Blog Sidebar Widgets Column -->
         <div class="col-md-4 sidebar-cust">
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
-                <input type="text" id="tags" class="tag-search">
+                <!--<div ng-controller="TypeaheadController">-->
+                <js-tag js-tag-mode="typeahead" js-tag-options="jsTagOptions"></js-tag>
+                <!--</div>-->
             </div>
             <hr>
             <div class="">

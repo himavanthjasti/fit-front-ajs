@@ -3,7 +3,7 @@
 
 
     angular
-        .module('app', ['ngRoute', 'ngCookies','textAngular'])
+        .module('app', ['ngRoute', 'ngCookies','textAngular','siyfion.sfTypeahead','jsTag','tagService'])
         .config(config)
         .run(run);
 

@@ -1,1 +1,1 @@
-Practo Fit Front END PROJECT 
+Practo Fit Front END PROJECT
