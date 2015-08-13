@@ -1,58 +1,44 @@
-﻿(function () {
-    'use strict';
+﻿'use strict';
 
 
     angular
         .module('app')
         .controller('ContentController', ContentController);
-
-    
-
     function ContentController($scope, $http, JSTagsCollection, tagService) {
 
 
         tagService.getAllTags().then(function(data) {
-            $scope.tag_data = data;
-        });
-        console.log($scope.tag_data);
-
-        //Get All Tags from database
-        //console.log("ss");
-       /* var scope = 0;
-        $http.get('http://fit.practo.local/tags').then(function(data){
             var tag_data = data.tagList;
             var arr_tag = [];
             for (var key in tag_data) {
                 arr_tag.push(tag_data[key].tagDetails.tagName);
             }
-            scope = arr_tag;
-            console.log(scope);
-            scope = data;
-
+            var suggestions1 = arr_tag;
+            suggestions1 = suggestions1.map(function(item) { return { "suggestion": item } });
+            suggestions.add(suggestions1);
+            suggestions.initialize();
         });
 
-        console.log(scope);*/
-
-
-
         // Build JSTagsCollection
-        $scope.tags = new JSTagsCollection(["ds","ddd"]);
+        $scope.tags = new JSTagsCollection(["HEALTH"]);
 
         // Export jsTags options, inlcuding our own tags object
         $scope.jsTagOptions = {
             'tags': $scope.tags
         };
+
+
         // **** Typeahead code **** //
-
-
-        var suggestions = ["sss",'ygjhg'];
+        var suggestions = [];
         suggestions = suggestions.map(function(item) { return { "suggestion": item } });
+        //console.log(suggestions);
         // Instantiate the bloodhound suggestion engine
         var suggestions = new Bloodhound({
             datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.suggestion); },
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local: suggestions
+            local:suggestions
         });
+        //console.log(suggestions);
 
         // Initialize the bloodhound suggestion engine
         suggestions.initialize();
@@ -68,6 +54,8 @@
             hint: false,
             highlight: true
         };
+
+
 
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
@@ -147,6 +135,3 @@
 
 
     }
-
-
-})();

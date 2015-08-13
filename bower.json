@@ -12,6 +12,7 @@
     "angular-mocks": "~1.4.0",
     "html5-boilerplate": "~5.2.0",
     "lodash": "~3.10.1",
-    "restangular": "~1.5.1"
+    "restangular": "~1.5.1",
+    "ng-tags-input": "~3.0.0"
   }
 }

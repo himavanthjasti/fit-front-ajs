@@ -6,7 +6,6 @@
         <div class="col-md-8">
             <input type="text" ng-model="postTitle" id="post_title" class="mt20 form-control input-lg flat-corner">
             <div text-angular ng-model="htmlVariable"></div>
-
             <button ng-click="createPost()">Submit</button>
         </div>
 
@@ -15,9 +14,9 @@
         <div class="col-md-4 sidebar-cust">
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
-                <!--<div ng-controller="TypeaheadController">-->
-                <js-tag js-tag-mode="typeahead" js-tag-options="jsTagOptions"></js-tag>
-                <!--</div>-->
+
+                    <js-tag js-tag-mode="typeahead" js-tag-options="jsTagOptions" ng-model="tagsw"></js-tag>
+
             </div>
             <hr>
             <div class="">
