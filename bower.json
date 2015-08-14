@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "homepage": "https://github.com/angular/angular-seed",
   "license": "MIT",
-  "private": true,
   "dependencies": {
     "angular": "~1.4.0",
     "angular-route": "~1.4.0",
@@ -13,5 +12,16 @@
     "html5-boilerplate": "~5.2.0",
     "lodash": "~3.10.1",
     "restangular": "~1.5.1"
-  }
+  },
+  "authors": [
+    "himavanthjasti <himavanth.jasti@practo.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
 }

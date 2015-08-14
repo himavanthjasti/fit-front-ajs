@@ -1,17 +1,22 @@
-﻿
-
-<div class="row">
+﻿<div class="row">
     <form ng-controller="ContentController">
         <!-- Blog Entries Column -->
-        <div class="col-md-8">
+        <div class="col-md-8" ng-controller="MyCtrl">
             <input type="text" ng-model="postTitle" id="post_title" class="mt20 form-control input-lg flat-corner">
-            <div text-angular ng-model="htmlVariable"></div>
+
+
+
+
+            <text-angular ng-model="html"></text-angular>
+
+
+
 
             <button ng-click="createPost()">Submit</button>
         </div>
 
 
-        <!-- Blog Sidebar Widgets Column -->
+     <!-- div -- Blog Sidebar Widgets Column -->
         <div class="col-md-4 sidebar-cust">
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
