@@ -13,6 +13,11 @@
     "html5-boilerplate": "~5.2.0",
     "lodash": "~3.10.1",
     "restangular": "~1.5.1",
-    "ng-tags-input": "~3.0.0"
+    "ng-tags-input": "~3.0.0",
+    "angular-typeahead": "~0.2.3",
+    "angular-bootstrap": "~0.13.3",
+    "ng-file-upload-shim": "~6.2.1",
+    "ng-file-upload": "~6.2.1",
+    "angular-cookies": "~1.4.4"
   }
 }

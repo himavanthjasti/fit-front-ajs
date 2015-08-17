@@ -3,12 +3,12 @@
 
 
     angular
-        .module('app', ['ngRoute', 'ngCookies','textAngular','siyfion.sfTypeahead','jsTag','tagService'])
+        .module('app', ['ngRoute', 'ngCookies','textAngular','siyfion.sfTypeahead','jsTag','tagService','ui.bootstrap','ngFileUpload'])
         .config(config)
         .run(run);
 
-    config.$inject = ['$routeProvider', '$locationProvider'];
-    function config($routeProvider, $locationProvider) {
+    config.$inject = ['$routeProvider', '$provide'];
+    function config($routeProvider, $provide) {
         $routeProvider
             .when('/content', {
                 controller: 'ContentController',
@@ -32,6 +32,20 @@
             })
 
             .otherwise({ redirectTo: '/allcontent' });
+
+        $provide.decorator('taOptions', ['taRegisterTool', '$modal', '$delegate',
+            function(taRegisterTool, $modal, taOptions) {
+                // $delegate is the taOptions we are decorating
+                // here we override the default toolbars specified in taOptions.
+                taOptions.toolbar = [
+                    ['clear', 'h1', 'h2', 'h3'],
+                    ['ul', 'ol'],
+                    ['bold', 'italics'],
+                    ['insertLink', 'insertVideo']
+                ];
+                return taOptions;
+            }
+        ]);
     }
 
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];

@@ -1,9 +1,70 @@
 ﻿'use strict';
+var base_path = "http://fit.practo.local/";
+
+var apps = angular
+    .module('app')
+    .controller('ContentController', ContentController);
 
 
-    angular
-        .module('app')
-        .controller('ContentController', ContentController);
+apps.config(function ($provide) {
+
+    $provide.decorator('taOptions', ['taRegisterTool', '$delegate', '$modal', function (taRegisterTool, taOptions, $modal) {
+        taRegisterTool('uploadImage', {
+            buttontext: 'Upload Image',
+            iconclass: "fa fa-image",
+            action: function (deferred,restoreSelection) {
+                $modal.open({
+                    controller: 'UploadImageModalInstance',
+                    templateUrl: 'views/content/upload.html'
+                }).result.then(
+                    function (result) {
+                        restoreSelection();
+                        document.execCommand('insertImage', true, result);
+                        deferred.resolve();
+                    },
+                    function () {
+                        deferred.resolve();
+                    }
+                );
+                return false;
+            }
+        });
+        taOptions.toolbar[1].push('uploadImage');
+        return taOptions;
+    }]);
+})
+
+
+
+apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upload){
+
+    $scope.image = 'assets/images/default.png';
+
+    $scope.progress = 0;
+    $scope.files = [];
+
+    $scope.upload = function(){
+        Upload.upload({
+            url: base_path+'uploads',
+            fields: {'dir': 'img/uploads/'},
+            file: $scope.files[0],
+            method: 'POST'
+        }).progress(function (evt) {
+            $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+        }).success(function (data) {
+            console.log(data);
+            $scope.progress = 0;
+            $scope.image = data.filename;
+        });
+    };
+
+    $scope.insert = function(){
+        $modalInstance.close($scope.image);
+    };
+})
+
+
+    apps.controller('ContentController', ContentController);
     function ContentController($scope, $http, JSTagsCollection, tagService) {
 
 
@@ -83,37 +144,31 @@
     }
 
 
-    angular
-        .module('app')
-        .controller('GetPostController', GetPostController);
+    apps.controller('GetPostController', GetPostController);
 
     function GetPostController($scope, $http, $routeParams) {
         var postId = $routeParams.postId;
-        $http.get('http://fit.practo.local/content/?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(base_path+'content/?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
 
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
     }
 
-    angular
-        .module('app')
-        .controller('GetAllPostController', GetAllPostController);
+    apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http) {
-        $http.get('http://fit.practo.local/content/?practoAccountId=1').success(function(data){
+        $http.get(base_path+'content/?practoAccountId=1').success(function(data){
             $scope.postList = data.postlist;
 
         });
     }
 
-    angular
-        .module('app')
-        .controller('UpdateContentController', UpdateContentController);
+    apps.controller('UpdateContentController', UpdateContentController);
 
     function UpdateContentController($scope, $http, $routeParams, $location) {
         var postId = $routeParams.postId;
-        $http.get('http://fit.practo.local/content/?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(+base_path+'content/?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             $scope.postTitle = data.postlist[0].postDetails.title;
             $scope.htmlVariable = data.postlist[0].postDetails.contentTxt;
@@ -126,7 +181,7 @@
 
             $http({
                 method: 'PATCH',
-                url: "http://fit.practo.local/content/"+postId,
+                url: base_path+"content/"+postId,
                 data: $.param(datax),
                 headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {$location.path("/allcontent");});
