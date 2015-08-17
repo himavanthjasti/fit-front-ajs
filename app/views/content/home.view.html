@@ -15,8 +15,10 @@
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
 
-                    <js-tag js-tag-mode="typeahead" js-tag-options="jsTagOptions" ng-model="tagsw"></js-tag>
-
+                    <!--<js-tag js-tag-mode="typeahead" js-tag-options="jsTagOptions" ng-model="tagsw"></js-tag>-->
+                <tags-input ng-model="tags" displayProperty="tagDetails.tagName">
+                    <auto-complete source="loadTags($query)"></auto-complete>
+                </tags-input>
             </div>
             <hr>
             <div class="">

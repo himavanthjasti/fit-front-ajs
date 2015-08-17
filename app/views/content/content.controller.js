@@ -65,66 +65,37 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
 
     apps.controller('ContentController', ContentController);
-    function ContentController($scope, $http, JSTagsCollection, tagService) {
+    function ContentController($scope, $http, $q) {
 
+        /*$(window).keypress(function(event) {
+            alert(event.keyCode);
+            if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+            alert("Ctrl-S pressed");
+            event.preventDefault();
+            return false;
+        });*/
 
-        tagService.getAllTags().then(function(data) {
-            var tag_data = data.tagList;
-            var arr_tag = [];
-            for (var key in tag_data) {
-                arr_tag.push(tag_data[key].tagDetails.tagName);
-            }
-            var suggestions1 = arr_tag;
-            suggestions1 = suggestions1.map(function(item) { return { "suggestion": item } });
-            suggestions.add(suggestions1);
-            suggestions.initialize();
-        });
-
-        // Build JSTagsCollection
-        $scope.tags = new JSTagsCollection(["HEALTH"]);
-
-        // Export jsTags options, inlcuding our own tags object
-        $scope.jsTagOptions = {
-            'tags': $scope.tags
+        $scope.tags = [];
+        $scope.loadTags = function(query) {
+            var deferred = $q.defer();
+            $http.get(base_path+'tags?tag=' + query).success(function(data){
+                var _tags = [];
+                for(var i=0; i<data.tagList.length; i++){
+                    _tags.push({id: data.tagList[i].tagDetails.id, text:data.tagList[i].tagDetails.tagName})
+                }
+                deferred.resolve(_tags);
+            });
+            return deferred.promise;
         };
-
-
-        // **** Typeahead code **** //
-        var suggestions = [];
-        suggestions = suggestions.map(function(item) { return { "suggestion": item } });
-        //console.log(suggestions);
-        // Instantiate the bloodhound suggestion engine
-        var suggestions = new Bloodhound({
-            datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.suggestion); },
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local:suggestions
-        });
-        //console.log(suggestions);
-
-        // Initialize the bloodhound suggestion engine
-        suggestions.initialize();
-
-        // Single dataset example
-        $scope.exampleData = {
-            displayKey: 'suggestion',
-            source: suggestions.ttAdapter()
-        };
-
-        // Typeahead options object
-        $scope.exampleOptions = {
-            hint: false,
-            highlight: true
-        };
-
-
 
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
+            //console.log($scope.tags);
 
-            var tag_arr = $scope.tags.tags;
+            var tag_arr = $scope.tags;
             var arr = [];
             for (var key in tag_arr) {
-                arr.push(tag_arr[key].value);
+                arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
 
@@ -132,12 +103,12 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             console.log(tag_string_name);
             var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'publishStatus':'PUBLISHED','tagid':'1'};
 
-            /*$http({
+            $http({
                 method: 'POST',
                 url: "http://fit.practo.local/content/",
                 data: $.param(datax), 
                 headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function () {});*/
+            }).success(function () {});
 
         }
 
