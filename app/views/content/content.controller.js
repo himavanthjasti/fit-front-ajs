@@ -1,5 +1,5 @@
 ﻿'use strict';
-var base_path = "http://fit.practo.local/";
+var base_path = "http://practo-fit.com/";
 
 var apps = angular
     .module('app')
@@ -88,6 +88,18 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             return deferred.promise;
         };
 
+        /*$scope.publishOptions = {
+            stores: [
+                {id : 1, name : 'DRAFT' },      
+                {id : 2, name : 'REVIEW' },
+                {id : 3, name : 'PUBLISHED'}
+            ]
+        };
+
+        $scope.publishStatus = {
+            store: $scope.sortOptions.stores[0]
+        };*/
+
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
             //console.log($scope.tags);
@@ -131,7 +143,41 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
     function GetAllPostController($scope, $http) {
         $http.get(base_path+'content/?practoAccountId=1').success(function(data){
             $scope.postList = data.postlist;
+            $scope.sortOptions = {
+            stores: [
+                {id : 1, name : 'Status' },      
+                {id : 2, name : 'Created At' },
+                {id : 3, name : 'Modified At'},
+                {id : 4, name : 'View Count'},
+                {id : 5, name : 'Like Count'}
+            ]
+        };
 
+            $scope.sortItem = {
+            store: $scope.sortOptions.stores[0]
+        };
+
+        $scope.reverse = true;
+
+        $scope.$watch('sortItem', function () {
+            console.log($scope.sortItem);
+            if ($scope.sortItem.store.id === 1) {
+                $scope.reverse = true;
+                 $scope.ff = 'postDetails.publishStatus';
+            } else if ($scope.sortItem.store.id === 2) {
+                $scope.reverse = false;
+                $scope.ff = 'postDetails.createdAt';
+            } else if ($scope.sortItem.store.id === 3) {
+                $scope.reverse = true;
+                $scope.ff = 'postDetails.modifiedAt';
+            } else if ($scope.sortItem.store.id === 4) {
+                $scope.reverse = true;
+                $scope.ff = 'postDetails.viewCount'
+            } else {
+                $scope.reverse = false;
+                $scope.ff = 'postDetails.likeCount';
+            }
+        }, true);
         });
     }
 
