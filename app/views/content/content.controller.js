@@ -81,7 +81,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             $http.get(base_path+'tags?tag=' + query).success(function(data){
                 var _tags = [];
                 for(var i=0; i<data.tagList.length; i++){
-                    _tags.push({id: data.tagList[i].tagDetails.id, text:data.tagList[i].tagDetails.tagName})
+                    _tags.push({id: data.tagList[i].id, text:data.tagList[i].tagName})
                 }
                 deferred.resolve(_tags);
             });
@@ -90,7 +90,6 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
-            //console.log($scope.tags);
 
             var tag_arr = $scope.tags;
             var arr = [];
@@ -98,14 +97,11 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
-
-
-            console.log(tag_string_name);
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'publishStatus':'PUBLISHED','tagid':'1'};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'tagid':tag_string_name};
 
             $http({
                 method: 'POST',
-                url: "http://fit.practo.local/content/",
+                url: base_path+"posts",
                 data: $.param(datax), 
                 headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {});
@@ -119,17 +115,37 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     function GetPostController($scope, $http, $routeParams) {
         var postId = $routeParams.postId;
-        $http.get(base_path+'content/?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
-
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
+
+
+        $scope.postCommentAction = function() {
+            var data = { 'comment' : $scope.postComment,'practo_account_id':1};
+
+            $http({
+                method: 'POST',
+                url: base_path+"posts/"+postId+"/comments",
+                data: $.param(data),
+                headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
+            }).success(function () {
+
+                $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
+                    $scope.postData = data.postlist[0].postDetails;
+                    $scope.postContent = data.postlist[0].postDetails.contentTxt;
+                    $scope.postComment = null;
+                });
+            });
+
+
+        }
     }
 
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http) {
-        $http.get(base_path+'content/?practoAccountId=1').success(function(data){
+        $http.get(base_path+'posts?practoAccountId=1').success(function(data){
             $scope.postList = data.postlist;
 
         });
@@ -137,12 +153,36 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     apps.controller('UpdateContentController', UpdateContentController);
 
-    function UpdateContentController($scope, $http, $routeParams, $location) {
+    function UpdateContentController($scope, $http, $routeParams, $location, $q) {
+
+
+        $scope.loadTags = function(query) {
+            var deferred = $q.defer();
+            $http.get(base_path+'tags?tag=' + query).success(function(data){
+                var _tags = [];
+                for(var i=0; i<data.tagList.length; i++){
+                    _tags.push({id: data.tagList[i].id, text:data.tagList[i].tagName})
+                }
+                deferred.resolve(_tags);
+            });
+            return deferred.promise;
+        };
+
+
         var postId = $routeParams.postId;
-        $http.get(+base_path+'content/?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             $scope.postTitle = data.postlist[0].postDetails.title;
             $scope.htmlVariable = data.postlist[0].postDetails.contentTxt;
+
+            var _pretags = [];
+            var tagList = data.postlist[0].postDetails.tags;
+            for(var i=0; i<tagList.length; i++){
+                _pretags.push({id: tagList[i].id, text:tagList[i].tagName})
+            }
+
+            $scope.tags = _pretags;
+
         });
 
         // Our form data for creating a new post with ng-model
@@ -152,7 +192,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
             $http({
                 method: 'PATCH',
-                url: base_path+"content/"+postId,
+                url: base_path+"posts/"+postId,
                 data: $.param(datax),
                 headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {$location.path("/allcontent");});

@@ -1,12 +1,41 @@
 ﻿
-
+<style>
+    table {border-collapse: collapse;}
+    td    {padding: 6px;}
+</style>
 <div class="row">
     <form ng-controller="GetPostController">
 
         <div class="col-md-8">
             <h1>{{postData.title}}</h1>
             <div class="desc" ng-bind-html="postContent"></div>
-            <a href="#/content/{{postData.id}}">Edit Post</a>
+            <div>
+                <table>
+                    <tr>
+                        <td>Like</td><td>{{postData.likeCount}}</td>
+                        <td>Comment</td><td>{{postData.commentCount}}</td>
+                        <td>Share</td><td>{{postData.shareCount}}</td>
+                        <td>Views</td><td>{{postData.viewCount}}</td>
+                    </tr>
+                </table>
+                <ul>
+                    <li ng-repeat="comment in postData.comments">
+                        <p>
+                        <div class="title">{{comment.commentTxt}}</div>
+                        <div class="title">{{comment.createdAt | fromNow}}</div>
+                        <div class="title">{{comment.practoAccountId}}</div>
+
+                        </p>
+
+
+                    </li>
+                </ul>
+
+            </div>
+            <div>
+                <input type="text" ng-model="postComment"/> <button ng-click="postCommentAction()">Post</button>
+            </div>
+            <a href="#!/content/{{postData.id}}">Edit Post</a>
 
 
         </div>

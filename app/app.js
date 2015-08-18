@@ -7,8 +7,19 @@
         .config(config)
         .run(run);
 
-    config.$inject = ['$routeProvider', '$provide'];
-    function config($routeProvider, $provide) {
+    angular.module('app').filter('fromNow', function() {
+        return function(date) {
+            return moment(date).fromNow();
+        }
+    });
+
+    config.$inject = ['$routeProvider', '$locationProvider', '$provide'];
+    function config($routeProvider, $locationProvider, $provide) {
+
+
+        $locationProvider.html5Mode(false);
+        $locationProvider.hashPrefix("!");
+
         $routeProvider
             .when('/content', {
                 controller: 'ContentController',

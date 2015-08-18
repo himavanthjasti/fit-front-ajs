@@ -12,7 +12,9 @@
         <div class="col-md-4 sidebar-cust">
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
-                <input type="text" id="tags" class="tag-search">
+                <tags-input ng-model="tags" displayProperty="tagName">
+                    <auto-complete source="loadTags($query)"></auto-complete>
+                </tags-input>
             </div>
             <hr>
             <div class="">
