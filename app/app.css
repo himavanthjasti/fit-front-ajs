@@ -1,5 +1,7 @@
 /* app css stylesheet */
 
+@import "compass/css3";
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -27,4 +29,28 @@
 .menu > li:nth-child(1):before {
   content: "";
   padding: 0;
+}
+
+.star-rating {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  
+  .star {
+    padding: 1px;
+    color: #ddd;
+    font-size: 20px;
+    text-shadow: .05em .05em #aaa;
+    list-style-type: none;
+    display: inline-block;
+    cursor: pointer;
+
+    &.filled {
+      color: #fd0;
+    }
+  }
+
+  &.readonly .star.filled {
+    color: #666;
+  }
 }

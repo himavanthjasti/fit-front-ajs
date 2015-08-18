@@ -64,7 +64,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 })
 
 
-    apps.controller('ContentController', ContentController);
+    apps.controller('ContentController', ContentController).directive('starRating', starRating);
     function ContentController($scope, $http, $q) {
 
         /*$(window).keypress(function(event) {
@@ -88,21 +88,30 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             return deferred.promise;
         };
 
-        /*$scope.publishOptions = {
+        $scope.publishOptions = {
             stores: [
                 {id : 1, name : 'DRAFT' },      
-                {id : 2, name : 'REVIEW' },
+                {id : 2, name : 'REVIEWED' },
                 {id : 3, name : 'PUBLISHED'}
             ]
         };
 
         $scope.publishStatus = {
-            store: $scope.sortOptions.stores[0]
-        };*/
+            store: $scope.publishOptions.stores[0]
+        };
+
+        $scope.rating = 5;
+
+        $scope.rateFunction = function(rating) {
+            console.log('Rating selected: ' + rating);
+        };
+
+
 
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
             //console.log($scope.tags);
+            //console.log($scope.publishStatus.store.name);
 
             var tag_arr = $scope.tags;
             var arr = [];
@@ -112,19 +121,64 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             var tag_string_name = arr.join();
 
 
+
             console.log(tag_string_name);
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'publishStatus':'PUBLISHED','tagid':'1'};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'publishStatus':$scope.publishStatus.store.name ,'tagid':'1'};
 
             $http({
                 method: 'POST',
                 url: "http://fit.practo.local/content/",
                 data: $.param(datax), 
-                headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-Profile-Token': '752f148a-5cc7-49ad-9964-6e09c11057fa', 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {});
 
         }
 
     }
+
+    function starRating() {
+        return {
+             restrict: 'EA',
+            template:
+                '<ul class="star-rating" ng-class="{readonly: readonly}">' +
+                '  <li ng-repeat="star in stars" class="star" ng-class="{filled: star.filled}" ng-click="toggle($index)">' +
+                '    <i class="fa fa-star"></i>' + // or &#9733
+                '  </li>' +
+                '</ul>',
+            scope: {
+            ratingValue: '=ngModel',
+            max: '=?', // optional (default is 5)
+            onRatingSelect: '&?',
+            readonly: '=?'
+        },
+        link: function(scope, element, attributes) {
+            if (scope.max == undefined) {
+                scope.max = 5;
+            }
+            function updateStars() {
+                scope.stars = [];
+                for (var i = 0; i < scope.max; i++) {
+                    scope.stars.push({
+                    filled: i < scope.ratingValue
+                });
+            }
+        };
+        scope.toggle = function(index) {
+          if (scope.readonly == undefined || scope.readonly === false){
+            scope.ratingValue = index + 1;
+            scope.onRatingSelect({
+              rating: index + 1
+            });
+          }
+        };
+        scope.$watch('ratingValue', function(oldValue, newValue) {
+          if (newValue) {
+            updateStars();
+          }
+        });
+      }
+    };
+  }
 
 
     apps.controller('GetPostController', GetPostController);
