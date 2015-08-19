@@ -35,6 +35,9 @@
             <div>
                 <input type="text" ng-model="postComment"/> <button ng-click="postCommentAction()">Post</button>
             </div>
+            <div>
+                <span>Tags: </span><span ng-repeat="tag in postData.tags">{{tag.tagName}} {{$last ? '' : ($index==postData.tags.length-2) ? ', ' : ', '}}</span>
+            </div>
             <a href="#!/content/{{postData.id}}">Edit Post</a>
 
 

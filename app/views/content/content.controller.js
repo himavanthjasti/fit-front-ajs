@@ -8,7 +8,7 @@ var apps = angular
 
 apps.config(function ($provide) {
 
-    $provide.decorator('taOptions', ['taRegisterTool', '$delegate', '$modal', function (taRegisterTool, taOptions, $modal) {
+    $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
         taRegisterTool('uploadImage', {
             buttontext: 'Upload Image',
             iconclass: "fa fa-image",
@@ -27,6 +27,10 @@ apps.config(function ($provide) {
                     }
                 );
                 return false;
+            },
+            onElementSelect: {
+                element: 'img',
+                action: taToolFunctions.imgOnSelectAction
             }
         });
         taOptions.toolbar[1].push('uploadImage');
@@ -64,7 +68,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 })
 
 
-    apps.controller('ContentController', ContentController);
+    apps.controller('ContentController', ContentController).directive('starRating', starRating);
     function ContentController($scope, $http, $q) {
 
         /*$(window).keypress(function(event) {
@@ -88,6 +92,24 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             return deferred.promise;
         };
 
+        $scope.publishOptions = {
+            stores: [
+                {id : 1, name : 'DRAFT' },
+                {id : 2, name : 'REVIEWED' },
+                {id : 3, name : 'PUBLISHED'}
+            ]
+        };
+
+        $scope.publishStatus = {
+            store: $scope.publishOptions.stores[0]
+        };
+
+        $scope.rating = 5;
+
+        $scope.rateFunction = function(rating) {
+            console.log('Rating selected: ' + rating);
+        };
+
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
 
@@ -97,7 +119,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'tagid':tag_string_name};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
 
             $http({
                 method: 'POST',
@@ -108,6 +130,47 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
         }
 
+    }
+
+    function starRating() {
+        return {
+            restrict: 'A',
+            template: '<ul class="rating">'
+            + '    <li ng-repeat="star in stars" ng-class="star" ng-click="toggle($index)">'
+            + '\u2605'
+            + '</li>'
+            + '</ul>',
+            scope: {
+                ratingValue: '=',
+                max: '=',
+                onRatingSelected: '&'
+            },
+            link: function (scope, elem, attrs) {
+                var updateStars = function () {
+                    scope.stars = [];
+                    for (var i = 0; i < scope.max; i++) {
+                        scope.stars.push({
+                            filled: i < scope.ratingValue
+                        });
+                    }
+                };
+
+                scope.toggle = function (index) {
+                    scope.ratingValue = index + 1;
+                    scope.onRatingSelected({
+                        rating: index + 1
+                    });
+                };
+
+                scope.$watch('ratingValue',
+                    function (oldVal, newVal) {
+                        if (newVal) {
+                            updateStars();
+                        }
+                    }
+                );
+            }
+        };
     }
 
 
@@ -148,6 +211,41 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
         $http.get(base_path+'posts?practoAccountId=1').success(function(data){
             $scope.postList = data.postlist;
 
+            $scope.sortOptions = {
+                stores: [
+                    {id : 1, name : 'Status' },
+                    {id : 2, name : 'Created At' },
+                    {id : 3, name : 'Modified At'},
+                    {id : 4, name : 'View Count'},
+                    {id : 5, name : 'Like Count'}
+                ]
+            };
+
+            $scope.sortItem = {
+                store: $scope.sortOptions.stores[0]
+            };
+
+            $scope.reverse = true;
+
+            $scope.$watch('sortItem', function () {
+                console.log($scope.sortItem);
+                if ($scope.sortItem.store.id === 1) {
+                    $scope.reverse = true;
+                    $scope.ff = 'postDetails.publishStatus';
+                } else if ($scope.sortItem.store.id === 2) {
+                    $scope.reverse = false;
+                    $scope.ff = 'postDetails.createdAt';
+                } else if ($scope.sortItem.store.id === 3) {
+                    $scope.reverse = true;
+                    $scope.ff = 'postDetails.modifiedAt';
+                } else if ($scope.sortItem.store.id === 4) {
+                    $scope.reverse = true;
+                    $scope.ff = 'postDetails.viewCount'
+                } else {
+                    $scope.reverse = false;
+                    $scope.ff = 'postDetails.likeCount';
+                }
+            }, true);
         });
     }
 
@@ -188,7 +286,14 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
         // Our form data for creating a new post with ng-model
         $scope.updatePost = function() {
 
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'publishStatus':'PUBLISHED','tagid':'1'};
+            var tag_arr = $scope.tags;
+            var arr = [];
+            for (var key in tag_arr) {
+                arr.push(tag_arr[key].id);
+            }
+            var tag_string_name = arr.join();
+
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'tagid':tag_string_name};
 
             $http({
                 method: 'PATCH',

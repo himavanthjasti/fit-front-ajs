@@ -2,10 +2,13 @@
 
 <div class="row">
     <form ng-controller="GetAllPostController">
+        Sort:
+        <select ng-model="sortItem.store" ng-options="item.name for item in sortOptions.stores"></select>
+        <label>Search: <input ng-model="searchText.postDetails.title"></label>
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <ul>
-                <li ng-repeat="post in postList">
+                <li ng-repeat="post in postList | orderBy:ff | filter:searchText">
                     <p>
                         <div class="title"><a href="#!/post/{{post.postDetails.id}}">{{post.postDetails.title}}</a></div>
                         <div class="desc" ng-bind-html="post.postDetails.contentTxt"></div>
