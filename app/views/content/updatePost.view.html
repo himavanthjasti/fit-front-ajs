@@ -5,9 +5,11 @@
         <div class="col-md-8">
             <input type="text" ng-model="postTitle" id="post_title" class="mt20 form-control input-lg flat-corner">
             <div  text-angular ng-model="htmlVariable"></div>
+            <div ng-if="role">
             <select ng-model="publishStatus.store" ng-options="item.name for item in publishOptions.stores"></select>
             <div ng-init="rating = star.rating - 1"></div>
             <div class="star-rating" star-rating rating-value="rating" data-max="5" on-rating-selected="rateFunction(rating)"></div>
+            </div>
             <button ng-click="updatePost()">Update Post</button>
         </div>
 

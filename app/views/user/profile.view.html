@@ -1,0 +1,16 @@
+<div class="row">
+    <div>
+
+        <!--<label ng-repeat="hi in healthInterests">
+              <input type="checkbox" name="selectedFruits[]" value="{{hi.text}}" ng-click="toggleSelection(fruitName)"> {{hi.text}}
+         </label>-->
+
+        <div ng-repeat="hi in healthInterests">
+            <input id="{{hi.text}}" type="checkbox" value="{{hi.text}}" ng-checked="selection.indexOf(hi.text) > -1" ng-click="toggleSelection(hi.id)" />
+            <label for="{{hi.text}}"></label>
+            {{hi.text}}
+        </div>
+
+        <button ng-click="updateHealthInterests()">Submit</button>
+    </div>
+</div>

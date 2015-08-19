@@ -3,7 +3,7 @@
 
 
     angular
-        .module('app', ['ngRoute', 'ngCookies','textAngular','tagService','ui.bootstrap','ngFileUpload','ngTagsInput'])
+        .module('app', ['ngRoute', 'ngCookies','textAngular','tagService','ui.bootstrap','ngFileUpload','ngTagsInput','angular-jwt'])
         .config(config)
         .run(run);
 
@@ -12,6 +12,8 @@
             return moment(date).fromNow();
         }
     });
+
+
 
     config.$inject = ['$routeProvider', '$locationProvider', '$provide'];
     function config($routeProvider, $locationProvider, $provide) {
@@ -41,6 +43,11 @@
                 templateUrl: 'views/content/post.view.html',
                 controllerAs: 'vm'
             })
+            .when('/profile', {
+                controller: 'UserController',
+                templateUrl: 'views/user/profile.view.html',
+                controllerAs: 'vm'
+            })
 
             .otherwise({ redirectTo: '/allcontent' });
 
@@ -61,7 +68,10 @@
 
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
     function run($rootScope, $location, $cookieStore, $http) {
-
+        //$cookieStore.put('practoFitRole', 'Admin');
+        $cookieStore.put('practoFitRole', 'Doctor');
     }
+
+
 
 })();

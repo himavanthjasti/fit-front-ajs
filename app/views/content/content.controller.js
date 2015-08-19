@@ -6,6 +6,7 @@ var apps = angular
     .controller('ContentController', ContentController);
 
 
+
 apps.config(function ($provide) {
 
     $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
@@ -69,7 +70,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
 
     apps.controller('ContentController', ContentController).directive('starRating', starRating);
-    function ContentController($scope, $http, $q) {
+    function ContentController($scope, $http, $q, $cookieStore) {
 
         /*$(window).keypress(function(event) {
             alert(event.keyCode);
@@ -78,6 +79,15 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             event.preventDefault();
             return false;
         });*/
+
+
+        var role = $cookieStore.get('practoFitRole');
+        $scope.role = false;
+        if(role == "Admin")
+        {
+            $scope.role = true;
+        }
+
 
         $scope.tags = [];
         $scope.loadTags = function(query) {
@@ -208,7 +218,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http) {
-        $http.get(base_path+'posts?practoAccountId=1').success(function(data){
+        $http.get(base_path+'posts?practoAccountId=1', { cache: true}).success(function(data){
             $scope.postList = data.postlist;
 
             $scope.sortOptions = {
@@ -251,7 +261,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     apps.controller('UpdateContentController', UpdateContentController);
 
-    function UpdateContentController($scope, $http, $routeParams, $location, $q) {
+    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore) {
 
 
         $scope.loadTags = function(query) {
@@ -282,6 +292,13 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
             $scope.tags = _pretags;
 
         });
+
+        var role = $cookieStore.get('practoFitRole');
+        $scope.role = false;
+        if(role == "Admin")
+        {
+            $scope.role = true;
+        }
 
         // Our form data for creating a new post with ng-model
         $scope.updatePost = function() {
