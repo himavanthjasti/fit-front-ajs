@@ -1,7 +1,5 @@
 /* app css stylesheet */
 
-@import "compass/css3";
-
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -31,26 +29,25 @@
   padding: 0;
 }
 
-.star-rating {
+.rating{
+  color: #a9a9a9;
   margin: 0;
   padding: 0;
+}
+
+ul.rating {
   display: inline-block;
-  
-  .star {
-    padding: 1px;
-    color: #ddd;
-    font-size: 20px;
-    text-shadow: .05em .05em #aaa;
-    list-style-type: none;
-    display: inline-block;
-    cursor: pointer;
+}
 
-    &.filled {
-      color: #fd0;
-    }
-  }
+.rating li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 1px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-  &.readonly .star.filled {
-    color: #666;
-  }
+.rating .filled {
+  color: #21568b;
 }
