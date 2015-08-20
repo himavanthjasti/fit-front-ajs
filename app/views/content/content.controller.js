@@ -66,7 +66,7 @@ var apps = angular
 
 
     apps.controller('ContentController', ContentController).directive('starRating', starRating);
-    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService) {
+    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal) {
 
         var role = $cookieStore.get('practoFitRole');
         var fitToken = $cookieStore.get('fitToken');
@@ -111,6 +111,11 @@ var apps = angular
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
 
+            $modal.open({
+                controller: 'UploadImageModalInstance',
+                templateUrl: 'views/content/shareModel.html'
+            });
+
             var tag_arr = $scope.tags;
             var arr = [];
             for (var key in tag_arr) {
@@ -119,12 +124,12 @@ var apps = angular
             var tag_string_name = arr.join();
             var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
 
-            $http({
+            /*$http({
                 method: 'POST',
                 url: FitGlobalService.baseUrl+"posts",
                 data: $.param(datax), 
                 headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function () {});
+            }).success(function () {});*/
 
         }
 
@@ -251,7 +256,7 @@ var apps = angular
 
     apps.controller('UpdateContentController', UpdateContentController);
 
-    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore, FitGlobalService) {
+    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore, FitGlobalService, $window) {
 
 
         $scope.loadTags = function(query) {
@@ -308,7 +313,11 @@ var apps = angular
                 url: FitGlobalService.baseUrl+"posts/"+postId,
                 data: $.param(datax),
                 headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function () {$location.path("/allcontent");});
+            }).success(function () {
+                //$location.path("/allcontent").reload(true);
+
+                $window.location.href = "/";
+            });
 
         }
 
