@@ -1,87 +1,75 @@
 ﻿'use strict';
-var base_path = "http://fit.practo.local/";
-
 var apps = angular
     .module('app')
     .controller('ContentController', ContentController);
 
+    apps.config(function ($provide) {
 
-
-apps.config(function ($provide) {
-
-    $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
-        taRegisterTool('uploadImage', {
-            buttontext: 'Upload Image',
-            iconclass: "fa fa-image",
-            action: function (deferred,restoreSelection) {
-                $modal.open({
-                    controller: 'UploadImageModalInstance',
-                    templateUrl: 'views/content/upload.html'
-                }).result.then(
-                    function (result) {
-                        restoreSelection();
-                        document.execCommand('insertImage', true, result);
-                        deferred.resolve();
-                    },
-                    function () {
-                        deferred.resolve();
-                    }
-                );
-                return false;
-            },
-            onElementSelect: {
-                element: 'img',
-                action: taToolFunctions.imgOnSelectAction
-            }
-        });
-        taOptions.toolbar[1].push('uploadImage');
-        return taOptions;
-    }]);
-})
+        $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
+            taRegisterTool('uploadImage', {
+                buttontext: 'Upload Image',
+                iconclass: "fa fa-image",
+                action: function (deferred,restoreSelection) {
+                    $modal.open({
+                        controller: 'UploadImageModalInstance',
+                        templateUrl: 'views/content/upload.html'
+                    }).result.then(
+                        function (result) {
+                            restoreSelection();
+                            document.execCommand('insertImage', true, result);
+                            deferred.resolve();
+                        },
+                        function () {
+                            deferred.resolve();
+                        }
+                    );
+                    return false;
+                },
+                onElementSelect: {
+                    element: 'img',
+                    action: taToolFunctions.imgOnSelectAction
+                }
+            });
+            taOptions.toolbar[1].push('uploadImage');
+            return taOptions;
+        }]);
+    })
 
 
 
-apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upload){
+    apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upload){
 
-    $scope.image = 'assets/images/default.png';
+        $scope.image = 'assets/images/default.png';
 
-    $scope.progress = 0;
-    $scope.files = [];
+        $scope.progress = 0;
+        $scope.files = [];
 
-    $scope.upload = function(){
-        Upload.upload({
-            url: base_path+'uploads',
-            fields: {'dir': 'img/uploads/'},
-            file: $scope.files[0],
-            method: 'POST'
-        }).progress(function (evt) {
-            $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-        }).success(function (data) {
-            console.log(data);
-            $scope.progress = 0;
-            $scope.image = data.filename;
-        });
-    };
+        $scope.upload = function(){
+            Upload.upload({
+                url: base_path+'uploads',
+                fields: {'dir': 'img/uploads/'},
+                file: $scope.files[0],
+                method: 'POST'
+            }).progress(function (evt) {
+                $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+            }).success(function (data) {
+                console.log(data);
+                $scope.progress = 0;
+                $scope.image = data.filename;
+            });
+        };
 
-    $scope.insert = function(){
-        $modalInstance.close($scope.image);
-    };
-})
+        $scope.insert = function(){
+            $modalInstance.close($scope.image);
+        };
+    })
 
 
     apps.controller('ContentController', ContentController).directive('starRating', starRating);
-    function ContentController($scope, $http, $q, $cookieStore) {
-
-        /*$(window).keypress(function(event) {
-            alert(event.keyCode);
-            if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
-            alert("Ctrl-S pressed");
-            event.preventDefault();
-            return false;
-        });*/
-
+    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService) {
 
         var role = $cookieStore.get('practoFitRole');
+        var fitToken = $cookieStore.get('fitToken');
         $scope.role = false;
         if(role == "Admin")
         {
@@ -92,7 +80,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
         $scope.tags = [];
         $scope.loadTags = function(query) {
             var deferred = $q.defer();
-            $http.get(base_path+'tags?tag=' + query).success(function(data){
+            $http.get(FitGlobalService.baseUrl+'tags?tag=' + query).success(function(data){
                 var _tags = [];
                 for(var i=0; i<data.tagList.length; i++){
                     _tags.push({id: data.tagList[i].id, text:data.tagList[i].tagName})
@@ -133,9 +121,9 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
             $http({
                 method: 'POST',
-                url: base_path+"posts",
+                url: FitGlobalService.baseUrl+"posts",
                 data: $.param(datax), 
-                headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {});
 
         }
@@ -186,9 +174,10 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     apps.controller('GetPostController', GetPostController);
 
-    function GetPostController($scope, $http, $routeParams) {
+    function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore) {
         var postId = $routeParams.postId;
-        $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
+        var fitToken = $cookieStore.get('fitToken');
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
@@ -199,12 +188,12 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
             $http({
                 method: 'POST',
-                url: base_path+"posts/"+postId+"/comments",
+                url: FitGlobalService.baseUrl+"posts/"+postId+"/comments",
                 data: $.param(data),
-                headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
 
-                $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
+                $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
                     $scope.postData = data.postlist[0].postDetails;
                     $scope.postContent = data.postlist[0].postDetails.contentTxt;
                     $scope.postComment = null;
@@ -217,8 +206,9 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     apps.controller('GetAllPostController', GetAllPostController);
 
-    function GetAllPostController($scope, $http) {
-        $http.get(base_path+'posts?practoAccountId=1', { cache: true}).success(function(data){
+    function GetAllPostController($scope, $http, FitGlobalService) {
+
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1', { cache: true}).success(function(data){
             $scope.postList = data.postlist;
 
             $scope.sortOptions = {
@@ -261,12 +251,12 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
     apps.controller('UpdateContentController', UpdateContentController);
 
-    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore) {
+    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore, FitGlobalService) {
 
 
         $scope.loadTags = function(query) {
             var deferred = $q.defer();
-            $http.get(base_path+'tags?tag=' + query).success(function(data){
+            $http.get(FitGlobalService.baseUrl+'tags?tag=' + query).success(function(data){
                 var _tags = [];
                 for(var i=0; i<data.tagList.length; i++){
                     _tags.push({id: data.tagList[i].id, text:data.tagList[i].tagName})
@@ -278,7 +268,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
 
         var postId = $routeParams.postId;
-        $http.get(base_path+'posts?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             $scope.postTitle = data.postlist[0].postDetails.title;
             $scope.htmlVariable = data.postlist[0].postDetails.contentTxt;
@@ -294,6 +284,7 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
         });
 
         var role = $cookieStore.get('practoFitRole');
+        var fitToken = $cookieStore.get('fitToken');
         $scope.role = false;
         if(role == "Admin")
         {
@@ -314,9 +305,9 @@ apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upl
 
             $http({
                 method: 'PATCH',
-                url: base_path+"posts/"+postId,
+                url: FitGlobalService.baseUrl+"posts/"+postId,
                 data: $.param(datax),
-                headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {$location.path("/allcontent");});
 
         }

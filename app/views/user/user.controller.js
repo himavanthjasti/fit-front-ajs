@@ -1,13 +1,13 @@
 'use strict';
-var base_path = "http://fit.practo.local/";
 
-var appy = angular
-    .module('app');
+var apps = angular
+    .module('app')
+    .controller('UserController', UserController);
 
-appy.controller('UserController', UserController);
-function UserController($scope, $http) {
+function UserController($scope, $http, FitGlobalService, $cookieStore) {
+    var fitToken = $cookieStore.get('fitToken');
     $scope.healthInterests = [];
-    $http.get(base_path+'healthinterests').success(function(data){
+    $http.get(FitGlobalService.baseUrl+'healthinterests').success(function(data){
         for(var i=0; i<data.count; i++){
             $scope.healthInterests.push({id: data.healthinterestsList[i].healthinterestsDetails.id, text:data.healthinterestsList[i].healthinterestsDetails.healthInterest})
 
@@ -16,14 +16,19 @@ function UserController($scope, $http) {
     });
 
     $scope.selection = [];
+    $http.get(FitGlobalService.baseUrl+'user/healthinterests?practo_account_id=1').success(function(data){
+        var selected = data.userhealthinterestsList.health_interests;
+        for(var i=0;i<selected.length;i++){
+            $scope.selection.push(parseInt(selected[i]));
+        }
+    });
+
 
     $scope.toggleSelection = function toggleSelection(hi) {
         var idx = $scope.selection.indexOf(hi);
-        // is currently selected
         if (idx > -1) {
             $scope.selection.splice(idx, 1);
         }
-        // is newly selected
         else {
             $scope.selection.push(hi);
         }
@@ -31,15 +36,14 @@ function UserController($scope, $http) {
 
     $scope.updateHealthInterests = function() {
         console.log($scope.selection);
-        var hl = $scope.selection.join();
-        var hl_data = { 'healthInterestsList' : hl,'practo_account_id':1};
+        var data = { 'healthInterestsList' : $scope.selection.join(","),'practo_account_id':1};
 
         $http({
             method: 'POST',
-            url: base_path+"users/healthinterests",
-            data: $.param(hl_data),
-            headers: {'X-Profile-Token': '7eeebc0c-6079-4764-a294-43d4c7cbb743', 'Content-Type': 'application/x-www-form-urlencoded'},
-        }).success(function () {
+            url: FitGlobalService.baseUrl+"users/healthinterests",
+            data: $.param(data),
+            headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (data) {
 
         });
     }

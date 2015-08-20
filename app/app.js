@@ -13,6 +13,12 @@
         }
     });
 
+    angular.module('app').factory('FitGlobalService', function() {
+        return {
+            baseUrl : 'http://fit.practo.local/'
+        };
+    });
+
 
 
     config.$inject = ['$routeProvider', '$locationProvider', '$provide'];
@@ -69,7 +75,24 @@
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
     function run($rootScope, $location, $cookieStore, $http) {
         //$cookieStore.put('practoFitRole', 'Admin');
-        $cookieStore.put('practoFitRole', 'Doctor');
+
+        $http.get('http://fit.practo.local/ulogin').success(function(data) {
+
+            var fitToken = $cookieStore.get('fitToken');
+            if($location.search().token == null && fitToken == null)
+            {
+                var myEl = angular.element(document.querySelector('#form'));
+                myEl.append(data);
+                document.getElementById("openid_message").submit();
+
+                $cookieStore.put('fitToken', '7eeebc0c-6079-4764-a294-43d4c7cbb743');
+                $cookieStore.put('practoFitRole', 'Doctor');
+
+            }
+            $location.url($location.path());
+
+        });
+
     }
 
 
