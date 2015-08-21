@@ -5,7 +5,7 @@ var apps = angular
 apps.controller('UserController', UserController);
 
 function UserController($scope, $http, FitGlobalService, $cookieStore) {
-
+    var practoAccountId = $cookieStore.get('practoAccountId');
     var fitToken = $cookieStore.get('fitToken');
     $scope.healthInterests = [];
     $http.get(FitGlobalService.baseUrl+'healthinterests').success(function(data){
@@ -13,11 +13,10 @@ function UserController($scope, $http, FitGlobalService, $cookieStore) {
             $scope.healthInterests.push({id: data.healthinterestsList[i].healthinterestsDetails.id, text:data.healthinterestsList[i].healthinterestsDetails.healthInterest})
 
         }
-        console.log($scope.healthInterests);
     });
 
     $scope.selection = [];
-    $http.get(FitGlobalService.baseUrl+'user/healthinterests?practo_account_id=1').success(function(data){
+    $http.get(FitGlobalService.baseUrl+'user/healthinterests?practo_account_id='+practoAccountId).success(function(data){
         var selected = data.userhealthinterestsList.health_interests;
         if(selected){
             for(var i=0;i<selected.length;i++){
@@ -39,7 +38,7 @@ function UserController($scope, $http, FitGlobalService, $cookieStore) {
 
     $scope.updateHealthInterests = function() {
         console.log($scope.selection);
-        var data = { 'healthInterestsList' : $scope.selection.join(","),'practo_account_id':1};
+        var data = { 'healthInterestsList' : $scope.selection.join(","),'practo_account_id':practoAccountId};
 
         $http({
             method: 'POST',
@@ -54,14 +53,15 @@ function UserController($scope, $http, FitGlobalService, $cookieStore) {
 
 apps.controller('GetNotificationController', GetNotificationController);
 function GetNotificationController($scope, $http, FitGlobalService, $cookieStore) {
+    var practoAccountId = $cookieStore.get('practoAccountId');
 
-    $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId=1').success(function(data) {
+    $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId='+practoAccountId).success(function(data) {
         $scope.notificationList = data.UserNotificationsList;
         //console.log(data.postlist);
     });
 
     $scope.getNotificationData = function(){
-        $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId=1').success(function(data) {
+        $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId='+practoAccountId).success(function(data) {
             $scope.notificationList = data.UserNotificationsList;
             //console.log(data.postlist);
         });

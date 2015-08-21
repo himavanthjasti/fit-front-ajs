@@ -101,8 +101,9 @@
                 }
                 $cookieStore.put('fitToken', $location.search().token);
                 $cookieStore.put('practoFitRole', 'Doctor');
-                console.log($location.search().token);
-                $location.url($location.path());
+                $cookieStore.put('practoAccountId', $location.search().uid);
+
+                //$location.url($location.path());
 
             });
         }

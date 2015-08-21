@@ -44,6 +44,7 @@ var apps = angular
         $scope.files = [];
 
         var fitToken = $cookieStore.get('fitToken');
+        var practoAccountId = $cookieStore.get('practoAccountId');
         $scope.upload = function(file){
 
             Upload.upload({
@@ -73,6 +74,7 @@ var apps = angular
 
         var role = $cookieStore.get('practoFitRole');
         var fitToken = $cookieStore.get('fitToken');
+        var practoAccountId = $cookieStore.get('practoAccountId');
         $scope.role = false;
         if(role == "Admin")
         {
@@ -95,8 +97,8 @@ var apps = angular
 
         $scope.publishOptions = {
             stores: [
-                {id : 1, name : 'DRAFT' },
-                {id : 2, name : 'REVIEWED' },
+                {id : 1, name : 'REVIEW' },
+                {id : 2, name : 'DRAFT' },
                 {id : 3, name : 'PUBLISHED'}
             ]
         };
@@ -125,7 +127,7 @@ var apps = angular
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
 
             $http({
                 method: 'POST',
@@ -185,7 +187,8 @@ var apps = angular
     function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore) {
         var postId = $routeParams.postId;
         var fitToken = $cookieStore.get('fitToken');
-        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
+        var practoAccountId = $cookieStore.get('practoAccountId');
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             //console.log($scope.postData);
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
@@ -193,7 +196,7 @@ var apps = angular
 
 
         $scope.postCommentAction = function() {
-            var data = { 'comment' : $scope.postComment,'practo_account_id':1};
+            var data = { 'comment' : $scope.postComment,'practo_account_id':practoAccountId};
 
             $http({
                 method: 'POST',
@@ -202,7 +205,7 @@ var apps = angular
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
 
-                $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
+                $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
                     $scope.postData = data.postlist[0].postDetails;
                     $scope.postContent = data.postlist[0].postDetails.contentTxt;
                     $scope.postComment = null;
@@ -215,9 +218,10 @@ var apps = angular
 
     apps.controller('GetAllPostController', GetAllPostController);
 
-    function GetAllPostController($scope, $http, FitGlobalService) {
+    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore) {
+        var practoAccountId = $cookieStore.get('practoAccountId');
 
-        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&limit=2&page=1', { cache: true}).success(function(data){
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1', { cache: true}).success(function(data){
             $scope.postList = data.postlist;
             $scope.total = data.count;
             //console.log($scope.pageCount);
@@ -260,7 +264,7 @@ var apps = angular
 
         $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
             //console.log({text, page, pageSize, total});
-            $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&limit='+pageSize+'&page='+page, { cache: true}).success(function(data){
+            $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit='+pageSize+'&page='+page, { cache: true}).success(function(data){
                 $scope.postList = data.postlist;
                 $scope.total = data.count;
 
@@ -322,9 +326,9 @@ var apps = angular
             return deferred.promise;
         };
 
-
+        var practoAccountId = $cookieStore.get('practoAccountId');
         var postId = $routeParams.postId;
-        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
             $scope.postTitle = data.postlist[0].postDetails.title;
             $scope.htmlVariable = data.postlist[0].postDetails.contentTxt;
@@ -357,7 +361,7 @@ var apps = angular
             }
             var tag_string_name = arr.join();
 
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable,'tagid':tag_string_name};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name};
 
             $http({
                 method: 'PATCH',
