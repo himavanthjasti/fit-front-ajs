@@ -37,19 +37,22 @@ var apps = angular
 
 
 
-    apps.controller('UploadImageModalInstance', function($scope, $modalInstance, Upload){
+    apps.controller('UploadImageModalInstance', function($scope, $cookieStore, $modalInstance, Upload, FitGlobalService){
 
         $scope.image = 'assets/images/default.png';
-
         $scope.progress = 0;
         $scope.files = [];
 
-        $scope.upload = function(){
+        var fitToken = $cookieStore.get('fitToken');
+        $scope.upload = function(file){
+
             Upload.upload({
-                url: base_path+'uploads',
-                fields: {'dir': 'img/uploads/'},
-                file: $scope.files[0],
-                method: 'POST'
+                url: FitGlobalService.baseUrl+'uploads',
+                file: file,
+                fileFormDataName: 'myFile',
+                sendFieldsAs: 'form',
+                method: 'POST',
+                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'}
             }).progress(function (evt) {
                 $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
             }).success(function (data) {
@@ -111,10 +114,10 @@ var apps = angular
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
 
-            $modal.open({
+            /*$modal.open({
                 controller: 'UploadImageModalInstance',
                 templateUrl: 'views/content/shareModel.html'
-            });
+            });*/
 
             var tag_arr = $scope.tags;
             var arr = [];
@@ -124,12 +127,12 @@ var apps = angular
             var tag_string_name = arr.join();
             var datax = { 'title' : $scope.postTitle,'practo_account_id':1,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
 
-            /*$http({
+            $http({
                 method: 'POST',
                 url: FitGlobalService.baseUrl+"posts",
                 data: $.param(datax), 
-                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function () {});*/
+                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+            }).success(function () {});
 
         }
 
@@ -184,6 +187,7 @@ var apps = angular
         var fitToken = $cookieStore.get('fitToken');
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
             $scope.postData = data.postlist[0].postDetails;
+            //console.log($scope.postData);
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
 
@@ -195,7 +199,7 @@ var apps = angular
                 method: 'POST',
                 url: FitGlobalService.baseUrl+"posts/"+postId+"/comments",
                 data: $.param(data),
-                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
 
                 $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&id='+postId).success(function(data){
@@ -212,9 +216,11 @@ var apps = angular
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http, FitGlobalService) {
-        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1', { cache: true}).success(function(data){
-            $scope.postList = data.postlist;
 
+        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&limit=2&page=1', { cache: true}).success(function(data){
+            $scope.postList = data.postlist;
+            $scope.total = data.count;
+            //console.log($scope.pageCount);
             $scope.sortOptions = {
                 stores: [
                     {id : 1, name : 'Status' },
@@ -251,6 +257,52 @@ var apps = angular
                 }
             }, true);
         });
+
+        $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
+            //console.log({text, page, pageSize, total});
+            $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1&limit='+pageSize+'&page='+page, { cache: true}).success(function(data){
+                $scope.postList = data.postlist;
+                $scope.total = data.count;
+
+                $scope.sortOptions = {
+                    stores: [
+                        {id : 1, name : 'Status' },
+                        {id : 2, name : 'Created At' },
+                        {id : 3, name : 'Modified At'},
+                        {id : 4, name : 'View Count'},
+                        {id : 5, name : 'Like Count'}
+                    ]
+                };
+
+                $scope.sortItem = {
+                    store: $scope.sortOptions.stores[0]
+                };
+
+                $scope.reverse = true;
+
+                $scope.$watch('sortItem', function () {
+                    console.log($scope.sortItem);
+                    if ($scope.sortItem.store.id === 1) {
+                        $scope.reverse = true;
+                        $scope.ff = 'postDetails.publishStatus';
+                    } else if ($scope.sortItem.store.id === 2) {
+                        $scope.reverse = false;
+                        $scope.ff = 'postDetails.createdAt';
+                    } else if ($scope.sortItem.store.id === 3) {
+                        $scope.reverse = true;
+                        $scope.ff = 'postDetails.modifiedAt';
+                    } else if ($scope.sortItem.store.id === 4) {
+                        $scope.reverse = true;
+                        $scope.ff = 'postDetails.viewCount'
+                    } else {
+                        $scope.reverse = false;
+                        $scope.ff = 'postDetails.likeCount';
+                    }
+                }, true);
+            });
+        };
+
+
     }
 
     apps.controller('UpdateContentController', UpdateContentController);
@@ -311,7 +363,7 @@ var apps = angular
                 method: 'PATCH',
                 url: FitGlobalService.baseUrl+"posts/"+postId,
                 data: $.param(datax),
-                headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
                 //$location.path("/allcontent").reload(true);
 

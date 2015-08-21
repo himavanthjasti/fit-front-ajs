@@ -17,9 +17,9 @@
                 <div id="connectLinks">
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button mb10 flat-corner blue-button white">Compose<span class="glyphicon glyphicon-pencil white floatright" aria-hidden="true"></span></a>
 
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
+                    <a href="#!/allcontent" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Insights Dashboard</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
+                    <a href="#!/notification" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Invite</a>
                 </div>
 
@@ -35,7 +35,8 @@
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
                 <p class="previous-posts">Go back to see all posts</p>
-                <div class="list-div col-md-12">
+                <div class="list-div col-md-12" ng-show="postData.title != null">
+
                     <p class="listing-title">{{postData.title}}<span class="pbtn-info ml15">under review</span><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></p>
                     <p class="listing-time">4 Hours Ago</p>
                     <div class="desc" ng-bind-html="postContent"></div>
@@ -62,7 +63,7 @@
                                 <img class="img-responsive img-circle" src="https://practo-fabric.s3.amazonaws.com/55bb61c4002b993d467bcaff0bec41709c89e9541885f.jpg" width="40" alt="">
                             </div>
                             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9  paddingleftzero shdivsp">
-                                <p class="greysdark fw4 fs16">{{comment.practoAccountId}}</p>
+                                <p class="greysdark fw4 fs16">{{comment.name}}</p>
                                 <p class="greylight fw3 fs14 mtminus5">{{comment.createdAt | fromNow}}</p>
                             </div>
                             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 paddingleftzero">
@@ -76,8 +77,8 @@
 
 
                     <div class="input-group">
-                        <input type="text" class="form-control" aria-label="Write a comment..." style="border-right: none;">
-                        <span class="input-group-addon btn btn-primary" style="background-color: #fff; color:#bbb;font-weight:600; border-left: none;">POST</span>
+                        <input ng-model="postComment" type="text" class="form-control" aria-label="Write a comment..." style="border-right: none;">
+                        <span class="input-group-addon btn btn-primary" style="background-color: #fff; color:#bbb;font-weight:600; border-left: none;" ng-click="postCommentAction()">POST</span>
                     </div>
 
                 </div>

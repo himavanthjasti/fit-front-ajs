@@ -413,3 +413,12 @@ a.listing-link{
     font-size: 14px !important;
     margin-right: 5px !important;
 }
+
+.listing-edit-delete{
+    border:none;
+    margin-top: -50px;
+}
+
+.listing-edit-delete:hover{
+    background: none !important;
+}

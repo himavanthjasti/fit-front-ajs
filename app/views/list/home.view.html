@@ -17,9 +17,9 @@
                 <div id="connectLinks">
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button mb10 flat-corner blue-button white">Compose<span class="glyphicon glyphicon-pencil white floatright" aria-hidden="true"></span></a>
 
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
+                    <a href="#!/allcontent" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Insights Dashboard</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
+                    <a href="#!/notification" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
                     <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Invite</a>
                 </div>
 
@@ -36,7 +36,17 @@
             <div class="col-md-9">
                 <div ng-repeat="post in postList | orderBy:ff | filter:searchText">
                     <div class="list-div col-md-12">
-                        <p class="listing-title">{{ post.postDetails.title }}<span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></p>
+                        <p class="listing-title">{{ post.postDetails.title }}<span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
+                        <div class="btn-group listing-edit-delete" style="float: right;">
+
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#!/content/{{post.postDetails.id}}">Edit</a></li>
+                                <li><a href="#!/content/{{post.postDetails.id}}">Delete</a></li>
+                            </ul>
+
+                        </div>
+                        </p>
                         <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
                         <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p>
                         <p class="listing-link"><a href="#!/post/{{post.postDetails.id}}" class="listing-link">Continue Reading</a></p>
@@ -47,6 +57,29 @@
                         </p>
                     </div>
                 </div>
+                <input type="hidden" ng-model="currentPage" ng-init="currentPage = 1">
+                <input type="hidden" ng-model="pageSize" ng-init="pageSize = 2">
+                <input type="hidden" ng-model="total" ng-init="total = 20">
+                <input type="hidden" ng-model="dots" ng-init="dots = '...'">
+                <input type="hidden" ng-model="adjacent" ng-init="adjacent = 2">
+                <input type="hidden" ng-model="ulClass" ng-init="ulClass = 'pagination'">
+                <input type="hidden" ng-model="activeClass" ng-init="activeClass = 'active'">
+                <input type="hidden" ng-model="disabledClass" ng-init="disabledClass = 'disabled'">
+                <paging
+                        class="small"
+                        page="currentPage"
+                        page-size="pageSize"
+                        total="total"
+                        adjacent="{{adjacent}}"
+                        dots="{{dots}}"
+                        scroll-top="{{scrollTop}}"
+                        hide-if-empty="{{hideIfEmpty}}"
+                        ul-class="{{ulClass}}"
+                        active-class="{{activeClass}}"
+                        disabled-class="{{disabledClass}}"
+                        show-prev-next="{{showPrevNext}}"
+                        paging-action="DoCtrlPagingAct('Paging Clicked', page, pageSize, total)">
+                </paging>
                 <p ng-show="postList.length == 0">
                     You haven't written any posts yet. <a href="#!/content">Add your first post now.</a>
                 </p>

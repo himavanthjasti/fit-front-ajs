@@ -1,5 +1,7 @@
+
+
 <div class="row">
-    <form>
+    <form ng-controller="GetNotificationController">
         <div class="col-lg-10 col-lg-offset-1">
 
             <div class="col-md-12" style="margin-left: -8px;">
@@ -32,13 +34,14 @@
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
-               <div ng-repeat="hi in healthInterests">
-                        <input id="{{hi.text}}" type="checkbox" value="{{hi.text}}" ng-checked="selection.indexOf({{hi.id}}) > -1" ng-click="toggleSelection(hi.id);" />
-                        <label for="{{hi.text}}"></label>
-                        {{hi.text}}
-                    </div>
+                <div ng-repeat="notification in notificationList">
+                    <div class="list-div col-md-12">
+                        <p class="listing-title">{{ notification.UserNotifications.id }}<span class="pbtn-info ml15">{{ notification.UserNotifications.practoAccountId }}</span>
 
-                    <button ng-click="updateHealthInterests();">Submit</button>
+                        </p>
+
+                    </div>
+                </div>
 
             </div>
 

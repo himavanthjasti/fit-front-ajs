@@ -1,4 +1,4 @@
-<form data-ng-submit="insert()">
+<form data-ng-submit="insert()" ng-app="fileUpload" name="form">
     <div class="modal-header">
         <div class="col-md-10">
             <h4 class="modal-title"><span class="glyphicon glyphicon-picture"></span> Upload Image</h4>
@@ -14,6 +14,6 @@
     <div class="modal-footer center clearfix">
         <button data-ng-click="$dismiss()" type="button" class="btn btn-default pull-left">Cancel</button>
         <button type="submit" data-ng-disabled="image == null || image == '' || image == 'img/posts/default.svg'" class="btn btn-primary pull-right">Insert Image</button>
-        <button type="button" data-ngf-select data-ngf-change="upload()" data-ng-model="files" data-ngf-multiple="false" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-picture mR5"></span>Upload Image</button>
+        <button type="ngf-select" name="file" data-ngf-select data-ngf-change="upload($file)" ngf-max-size="'12MB'" ng-model="files"  accept="image/*"  data-ngf-multiple="false" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-picture mR5"></span>Upload Image</button>
     </div>
 </form>

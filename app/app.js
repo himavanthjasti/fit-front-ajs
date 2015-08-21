@@ -3,7 +3,7 @@
 
 
     angular
-        .module('app', ['ngRoute', 'ngCookies','textAngular','tagService','ui.bootstrap','ngFileUpload','ngTagsInput','angular-jwt'])
+        .module('app', ['ngRoute', 'ngCookies','textAngular','brantwills.paging','tagService','ui.bootstrap','ngFileUpload','ngTagsInput','angular-jwt'])
         .config(config)
         .run(run);
 
@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : 'http://backend.fit1.com/'
+            baseUrl : 'http://fit.practo.local/'
         };
     });
 
@@ -57,6 +57,11 @@
                 templateUrl: 'views/user/profile.view.html',
                 controllerAs: 'vm'
             })
+            .when('/notification', {
+                controller: 'GetNotificationController',
+                templateUrl: 'views/user/notification.view.html',
+                controllerAs: 'vm'
+            })
 
             .otherwise({ redirectTo: '/allcontent' });
 
@@ -81,22 +86,27 @@
     function run($rootScope, $location, $cookieStore, $http, $route) {
         //$cookieStore.put('practoFitRole', 'Admin');
 
-       /* $http.get('http://fit.practo.local/ulogin').success(function(data) {
+        var fitToken = $cookieStore.get('fitToken');
+        if(fitToken == null)
+        {
 
-            var fitToken = $cookieStore.get('fitToken');
-            if($location.search().token == null && fitToken == null)
-            {
-                var myEl = angular.element(document.querySelector('#form'));
-                myEl.append(data);
-                document.getElementById("openid_message").submit();
+            $http.get('http://fit.practo.local/ulogin').success(function(data) {
 
-                $cookieStore.put('fitToken', '7eeebc0c-6079-4764-a294-43d4c7cbb743');
+                if($location.search().token == null)
+                {
+                    var myEl = angular.element(document.querySelector('#form'));
+                    myEl.append(data);
+
+                    document.getElementById("openid_message").submit();
+                }
+                $cookieStore.put('fitToken', $location.search().token);
                 $cookieStore.put('practoFitRole', 'Doctor');
+                console.log($location.search().token);
+                $location.url($location.path());
 
-            }
-            $location.url($location.path());
+            });
+        }
 
-        }); */
 
 
         $rootScope.$on('$routeChangeSuccess', function() {

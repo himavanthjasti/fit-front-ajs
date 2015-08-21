@@ -1,10 +1,11 @@
 'use strict';
 
 var apps = angular
-    .module('app')
-    .controller('UserController', UserController);
+    .module('app');
+apps.controller('UserController', UserController);
 
 function UserController($scope, $http, FitGlobalService, $cookieStore) {
+
     var fitToken = $cookieStore.get('fitToken');
     $scope.healthInterests = [];
     $http.get(FitGlobalService.baseUrl+'healthinterests').success(function(data){
@@ -18,8 +19,10 @@ function UserController($scope, $http, FitGlobalService, $cookieStore) {
     $scope.selection = [];
     $http.get(FitGlobalService.baseUrl+'user/healthinterests?practo_account_id=1').success(function(data){
         var selected = data.userhealthinterestsList.health_interests;
-        for(var i=0;i<selected.length;i++){
-            $scope.selection.push(parseInt(selected[i]));
+        if(selected){
+            for(var i=0;i<selected.length;i++){
+                $scope.selection.push(parseInt(selected[i]));
+            }
         }
     });
 
@@ -42,9 +45,28 @@ function UserController($scope, $http, FitGlobalService, $cookieStore) {
             method: 'POST',
             url: FitGlobalService.baseUrl+"users/healthinterests",
             data: $.param(data),
-            headers: {'X-Profile-Token': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'}
+            headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
 
         });
     }
+}
+
+apps.controller('GetNotificationController', GetNotificationController);
+function GetNotificationController($scope, $http, FitGlobalService, $cookieStore) {
+
+    $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId=1').success(function(data) {
+        $scope.notificationList = data.UserNotificationsList;
+        //console.log(data.postlist);
+    });
+
+    $scope.getNotificationData = function(){
+        $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId=1').success(function(data) {
+            $scope.notificationList = data.UserNotificationsList;
+            //console.log(data.postlist);
+        });
+    };
+
+    setInterval($scope.getNotificationData, 10000);
+
 }
