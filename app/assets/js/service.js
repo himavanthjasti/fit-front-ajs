@@ -6,7 +6,7 @@
             getAllTags: function() {
                 // the $http API is based on the deferred/promise APIs exposed by the $q service
                 // so it returns a promise for us by default
-                return $http.get('http://fit.practo.local/tags')
+                return $http.get('http://backend.fit1.com/tags')
                     .then(function(response) {
                         if (typeof response.data === 'object') {
                             return response.data;

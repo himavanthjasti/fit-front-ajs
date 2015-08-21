@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : 'http://fit.practo.local/'
+            baseUrl : 'http://backend.fit1.com/'
         };
     });
 
@@ -32,6 +32,7 @@
             .when('/content', {
                 controller: 'ContentController',
                 templateUrl: 'views/content/home.view.html',
+                desc : 'Creating an article',
                 controllerAs: 'vm'
             })
             .when('/content/:postId', {
@@ -41,12 +42,14 @@
             })
             .when('/allcontent', {
                 controller: 'ContentController',
-                templateUrl: 'views/content/allcontent.view.html',
+                templateUrl: 'views/list/home.view.html',
+                desc : 'All Posts',
                 controllerAs: 'vm'
             })
             .when('/post/:postId', {
                 controller: 'ContentController',
-                templateUrl: 'views/content/post.view.html',
+                templateUrl: 'views/post_details/post.details.html',
+                desc : 'View Post',
                 controllerAs: 'vm'
             })
             .when('/profile', {
@@ -72,11 +75,13 @@
         ]);
     }
 
-    run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
-    function run($rootScope, $location, $cookieStore, $http) {
+
+
+    run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];
+    function run($rootScope, $location, $cookieStore, $http, $route) {
         //$cookieStore.put('practoFitRole', 'Admin');
 
-        $http.get('http://fit.practo.local/ulogin').success(function(data) {
+       /* $http.get('http://fit.practo.local/ulogin').success(function(data) {
 
             var fitToken = $cookieStore.get('fitToken');
             if($location.search().token == null && fitToken == null)
@@ -91,7 +96,14 @@
             }
             $location.url($location.path());
 
+        }); */
+
+
+        $rootScope.$on('$routeChangeSuccess', function() {
+            //document.page-title = $route.current.desc;
+            $rootScope.desc = $route.current.desc;
         });
+
 
     }
 

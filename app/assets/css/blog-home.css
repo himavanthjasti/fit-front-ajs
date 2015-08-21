@@ -4,12 +4,41 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,300,400,600,700);
+
 body {
+    font-family: 'Open Sans', sans-serif;
     padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+/*@media (min-width: 1200px) {
+    .container {
+        width: 100%;
+    }
+}*/
+
+.col-lg-offset-2-0-0 {
+    margin-left: 2%;
+}
+
+.col-lg-offset-3-0-0 {
+    margin-left: 3%;
 }
 
 footer {
     margin: 50px 0;
+}
+
+.clear{
+    clear: both;
+}
+
+.black{
+    color: #000;
+}
+
+.white{
+    color:  #fff;
 }
 
 .fw4{
@@ -77,10 +106,6 @@ footer {
     margin-top: 20px;
 }
 
-.ml15{
-    margin-left: 15px;
-}
-
 .mb10{
     margin-bottom: 10px;
 }
@@ -101,6 +126,54 @@ footer {
     margin-bottom: -15px;
 }
 
+.ml5{
+    margin-left: 5px;
+}
+
+.ml10{
+    margin-left: 10px;
+}
+
+.ml15{
+    margin-left: 15px;
+}
+
+.ml20{
+    margin-left: 20px;
+}
+
+.mr5{
+    margin-right: 5px;
+}
+
+.mr10{
+    margin-right: 10px;
+}
+
+.mr15{
+    margin-right: 15px;
+}
+
+.mr20{
+    margin-right: 20px;
+}
+
+.mrminus10{
+    margin-right: -10px;
+}
+
+.mrminus15{
+    margin-right: -15px;
+}
+
+.mlminu10{
+    margin-left: -10px;
+}
+
+.mlminu15{
+    margin-left: -15px;
+}
+
 .floatleft{
     float: left;
 }
@@ -111,6 +184,14 @@ footer {
 
 .flat-corner{
     border-radius: 0px;
+}
+
+.open-top{
+    border-top: none;
+}
+
+.open-bottom{
+    border-bottom: none;
 }
 
 .input-lg{
@@ -124,8 +205,16 @@ footer {
     color: #fff;
 }
 
-.uppercase{
-    text-transform: uppercase;
+.logo{
+    margin-top: 16px;
+    height: 28px;
+    margin-right: 65px;
+    float: left;
+}
+
+.page-title{
+    font-size: 28px;
+    font-weight: 200;
 }
 
 .sidebar-cust{
@@ -133,6 +222,7 @@ footer {
     min-height: 400px;
     margin-top: -5px;
     padding-bottom: 15px;
+    padding-right: 5%;
 }
 
 .tag-search{
@@ -151,4 +241,175 @@ footer {
 
 .sidebar-p{
     color: #979797;
+}
+
+.left-sidebar-button{
+    width: 100%;
+    text-align: left;
+}
+
+.blue-button{
+    background-color: #02a6d8;
+}
+
+.blue-button:hover{
+    background-color: #02a6ee;
+    color:  #fff;
+}
+
+.navigation-span{
+    color: #717171;
+}
+
+.list-div{
+    border: 1px solid #eaeaea;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.listing-title{
+    color:  #4a4a4a;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.listing-time{
+    color: #c0c0c0;
+    font-size: 12px;
+    margin-top: -8px;
+}
+
+.listing-p{
+    font-size: 18px;
+    color:  #4a4a4a;
+    font-weight: 200;
+}
+
+.pbtn-info {
+    color: #ff6f00;
+    background-color: #fff;
+    border:1px solid #ff6f00;
+    font-size: 10px;
+    font-weight: 400;
+    display: inline-block;
+    padding: 4px 12px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.pbtn-info:hover{
+    color: #ff6f00;
+    border-color: #ff6f00;
+}
+
+.listing-edit-delete-icon{
+    font-size: 14px;
+    font-weight: 100 !important;
+    color: #d6d6d6;
+}
+
+p.listing-link{
+    margin-top: -4px;
+}
+
+a.listing-link{
+    color: #1DAAE2;
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.share-info {
+    color: #c0c0c0;
+    background-color: #fff;
+    border:1px solid #eaeaea;
+    font-size: 14px;
+    font-weight: 200;
+    display: inline-block;
+    padding: 2px 12px;
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.previous-posts{
+    color: #717171;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 0px;
+}
+
+.social-share-separator{
+    color: #f1f1f1;
+    margin: 0px 8px;
+}
+
+.social-share-icon{
+    margin-right: 7px;
+    margin-left: -7px;
+}
+
+.btn-toolbar{
+    margin-bottom: 10px; /*for textangular*/
+}
+
+.tags {
+    border: 1px solid #f6f6f6 !important;
+    height: 46px !important;
+    padding: 7px 6px !important;
+    box-shadow: none !important;
+}
+
+.post-details-tags{
+    color: #7f7f7f;
+}
+
+.post-details-tag-style{
+    padding: 3px 8px;
+    background-color: #77d4f1;
+    margin-right: 10px;
+    color: #02a6d8;
+    border: 1px solid #02a6d8;
+    font-size: 12px;
+}
+
+.post-details-viewed{
+    color: #c0c0c0;
+    font-size: 14px;
+    margin-bottom: -10px;
+    margin-top: -10px;
+}
+
+.greylight{
+    color:  #c0c0c0;
+}
+
+.greydark{
+    color: #4a4a4a;
+}
+
+
+.submit-button{
+    float: right;
+    margin-top: 10px;
+    width: 225px;
+    height: 48px;
+    background-color: #fff;
+    color: #02a6d8;
+    border: 1px solid #02a6d8;
+}
+
+.tag-item::before {
+    content: "#";
+}
+
+.tag-item{
+    background: #f6f6f6 !important;
+    border-radius: 0px !important;
+    color: #7f7f7f;
+    border: 1px solid #eaeaea;
+    font-size: 14px !important;
+    margin-right: 5px !important;
 }

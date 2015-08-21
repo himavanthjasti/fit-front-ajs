@@ -7,7 +7,7 @@ var apps = angular
 
         $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
             taRegisterTool('uploadImage', {
-                buttontext: 'Upload Image',
+                buttontext: '',
                 iconclass: "fa fa-image",
                 action: function (deferred,restoreSelection) {
                     $modal.open({
@@ -212,7 +212,6 @@ var apps = angular
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http, FitGlobalService) {
-
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId=1', { cache: true}).success(function(data){
             $scope.postList = data.postlist;
 

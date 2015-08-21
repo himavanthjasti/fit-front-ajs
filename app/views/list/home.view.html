@@ -1,0 +1,74 @@
+﻿
+
+<div class="row">
+    <form ng-controller="GetAllPostController">
+        <div class="col-lg-10 col-lg-offset-1">
+
+            <div class="col-md-12" style="margin-left: -8px;">
+                <span class="mt15 floatleft navigation-span ml5">All Profiles</span>
+                <span class="mt15 floatleft navigation-span ml20">Appointments</span>
+                <span class="mt15 floatleft navigation-span ml20">Author</span>
+                <hr class="clear mrminus15">
+            </div>
+
+            <!-- Blog Entries Column -->
+            <div class="col-md-3" style="margin-left: -8px;">
+
+                <div id="connectLinks">
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button mb10 flat-corner blue-button white">Compose<span class="glyphicon glyphicon-pencil white floatright" aria-hidden="true"></span></a>
+
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Insights Dashboard</a>
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Invite</a>
+                </div>
+
+                <div id="socialConnect" class="mt20">
+                    <p class="sidebar-p">Connect Accounts</p>
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner mb10">Facebook</a>
+                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Twitter</a>
+                </div>
+
+
+            </div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div class="col-md-9">
+                <div ng-repeat="post in postList | orderBy:ff | filter:searchText">
+                    <div class="list-div col-md-12">
+                        <p class="listing-title">{{ post.postDetails.title }}<span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></p>
+                        <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
+                        <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p>
+                        <p class="listing-link"><a href="#!/post/{{post.postDetails.id}}" class="listing-link">Continue Reading</a></p>
+                        <p>
+                            <span class="share-info"><span class="glyphicon glyphicon-heart social-share-icon"></span>Like<span class="social-share-separator">|</span>{{ post.postDetails.likeCount }}</span>
+                            <span class="share-info ml15"><span class="glyphicon glyphicon-comment social-share-icon"></span>Comment<span class="social-share-separator">|</span>{{ post.postDetails.commentCount }}</span>
+                            <span class="share-info ml15"><span class="glyphicon glyphicon-share-alt social-share-icon"></span>Share<span class="social-share-separator">|</span>{{ post.postDetails.shareCount }}</span>
+                        </p>
+                    </div>
+                </div>
+                <p ng-show="postList.length == 0">
+                    You haven't written any posts yet. <a href="#!/content">Add your first post now.</a>
+                </p>
+            </div>
+
+        </div>
+        <!-- /.col-10 -->
+    </form>
+</div>
+
+    <!-- /.row -->
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Footer</p>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </footer>
+
