@@ -51,7 +51,8 @@
                     <p class="fw4 fs14 post-details-tags">
                         <span class="mr20">Tags</span>
                         <span ng-repeat="tag in postData.tags">
-                            <span class="post-details-tag-style">{{tag.tagName}} </span>
+                            <!--<span class="post-details-tag-style">{{tag.tagName}} </span>-->
+                            <a href="#!/tag/{{tag.id}}"><span class="post-details-tag-style">{{tag.tagName}} </span></a>
                         </span>
                     </p>
                     <hr class="mrminus10 mlminu10">

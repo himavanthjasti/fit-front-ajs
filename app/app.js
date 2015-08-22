@@ -67,7 +67,11 @@
                 templateUrl: 'views/user/login.view.html',
                 controllerAs: 'vm'
             })
-
+            .when('/tag/:tagId', {
+                controller: 'ContentController',
+                templateUrl: 'views/list/home.view.html',
+                controllerAs: 'vm'
+            })
             .otherwise({ redirectTo: '/login' });
 
         $provide.decorator('taOptions', ['taRegisterTool', '$modal', '$delegate',

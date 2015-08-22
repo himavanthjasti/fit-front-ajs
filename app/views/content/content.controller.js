@@ -189,6 +189,8 @@ var apps = angular
         var fitToken = $cookieStore.get('fitToken');
         var practoAccountId = $cookieStore.get('practoAccountId');
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
+            console.log(1);
+            console.log(data);
             $scope.postData = data.postlist[0].postDetails;
             //console.log($scope.postData);
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
@@ -218,11 +220,17 @@ var apps = angular
 
     apps.controller('GetAllPostController', GetAllPostController);
 
-    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore) {
+    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams) {
 
         var practoAccountId = $cookieStore.get('practoAccountId');
 
-        $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1', { cache: true}).success(function(data){
+        if($routeParams.tagId){
+            var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1&tagId='+$routeParams.tagId;
+        } else {
+            var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1';
+        }
+
+        $http.get(url, { cache: true}).success(function(data){
             $scope.postList = data.postlist;
             $scope.total = data.count;
             $scope.sortOptions = {
