@@ -70,3 +70,26 @@ function GetNotificationController($scope, $http, FitGlobalService, $cookieStore
     setInterval($scope.getNotificationData, 10000);
 
 }
+
+apps.controller('LoginController', LoginController);
+function LoginController($scope, $location, $http, $cookieStore) {
+
+        $http.get($scope.backendUrl+'ulogin').success(function(data) {
+
+        if($location.search().token == null)
+        {
+            var myEl = angular.element(document.querySelector('#form'));
+            myEl.append(data);
+
+            document.getElementById("openid_message").submit();
+        }
+        else
+        {
+            $cookieStore.put('fitToken', $location.search().token);
+            $cookieStore.put('practoFitRole', 'Doctor');
+            $cookieStore.put('practoAccountId', $location.search().uid);
+            $location.url('/allcontent');
+        }
+
+    });
+}

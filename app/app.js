@@ -62,8 +62,13 @@
                 templateUrl: 'views/user/notification.view.html',
                 controllerAs: 'vm'
             })
+            .when('/login', {
+                controller: 'LoginController',
+                templateUrl: 'views/user/login.view.html',
+                controllerAs: 'vm'
+            })
 
-            .otherwise({ redirectTo: '/allcontent' });
+            .otherwise({ redirectTo: '/login' });
 
         $provide.decorator('taOptions', ['taRegisterTool', '$modal', '$delegate',
             function(taRegisterTool, $modal, taOptions) {
@@ -81,39 +86,19 @@
     }
 
 
-
     run.$inject = ['$rootScope', '$location', '$cookieStore', '$http', '$route'];
     function run($rootScope, $location, $cookieStore, $http, $route) {
-        //$cookieStore.put('practoFitRole', 'Admin');
 
-        var fitToken = $cookieStore.get('fitToken');
-        if(fitToken == null)
-        {
-
-            $http.get('http://fit.practo.local/ulogin').success(function(data) {
-
-                if($location.search().token == null)
-                {
-                    var myEl = angular.element(document.querySelector('#form'));
-                    myEl.append(data);
-
-                    document.getElementById("openid_message").submit();
-                }
-                $cookieStore.put('fitToken', $location.search().token);
-                $cookieStore.put('practoFitRole', 'Doctor');
-                $cookieStore.put('practoAccountId', $location.search().uid);
-
-                //$location.url($location.path());
-
-            });
-        }
-
-
+        $rootScope.$on('$routeChangeStart', function () {
+            if ($cookieStore.get("fitToken")==null) {
+                $location.path('/login');
+            }
+        });
 
         $rootScope.$on('$routeChangeSuccess', function() {
-            //document.page-title = $route.current.desc;
             $rootScope.desc = $route.current.desc;
         });
+        $rootScope.backendUrl = "http://fit.practo.local/";
 
 
     }

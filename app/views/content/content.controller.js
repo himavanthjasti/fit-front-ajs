@@ -48,7 +48,7 @@ var apps = angular
         $scope.upload = function(file){
 
             Upload.upload({
-                url: FitGlobalService.baseUrl+'uploads',
+                url: 'http://fit.practo.local/uploads',
                 file: file,
                 fileFormDataName: 'myFile',
                 sendFieldsAs: 'form',
@@ -219,12 +219,12 @@ var apps = angular
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http, FitGlobalService, $cookieStore) {
+
         var practoAccountId = $cookieStore.get('practoAccountId');
 
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1', { cache: true}).success(function(data){
             $scope.postList = data.postlist;
             $scope.total = data.count;
-            //console.log($scope.pageCount);
             $scope.sortOptions = {
                 stores: [
                     {id : 1, name : 'Status' },
