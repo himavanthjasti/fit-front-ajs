@@ -67,6 +67,11 @@
                 templateUrl: 'views/user/login.view.html',
                 controllerAs: 'vm'
             })
+            .when('/tag/:tagId', {
+                controller: 'ContentController',
+                templateUrl: 'views/list/home.view.html',
+                controllerAs: 'vm'
+            })
 
             .otherwise({ redirectTo: '/login' });
 
@@ -77,7 +82,7 @@
                 taOptions.toolbar = [
                     ['clear', 'h1', 'h2', 'h3'],
                     ['ul', 'ol'],
-                    ['bold', 'italics'],
+                    ['bold', 'italics','underline'],
                     ['insertLink', 'insertVideo']
                 ];
                 return taOptions;

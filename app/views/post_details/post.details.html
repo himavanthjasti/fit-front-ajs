@@ -51,7 +51,7 @@
                     <p class="fw4 fs14 post-details-tags">
                         <span class="mr20">Tags</span>
                         <span ng-repeat="tag in postData.tags">
-                            <span class="post-details-tag-style">{{tag.tagName}} </span>
+                            <a href="#!/tag/{{tag.id}}"><span class="post-details-tag-style">{{tag.tagName}} </span></a>
                         </span>
                     </p>
                     <hr class="mrminus10 mlminu10">
@@ -75,8 +75,10 @@
 
                     </div>
 
-
-                    <div class="input-group">
+                    <p ng-show="postData.comments.length == 0">
+                        No Comments yet in this  post.
+                    </p>
+                    <div class="input-group" ng-show="postData.comments.length > 0">
                         <input ng-model="postComment" type="text" class="form-control" aria-label="Write a comment..." style="border-right: none;">
                         <span class="input-group-addon btn btn-primary" style="background-color: #fff; color:#bbb;font-weight:600; border-left: none;" ng-click="postCommentAction()">POST</span>
                     </div>

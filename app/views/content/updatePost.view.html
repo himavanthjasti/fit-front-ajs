@@ -17,7 +17,7 @@
         <div class="col-md-4 sidebar-cust">
             <div class="mt20">
                 <h4 class="text-uppercase sidebar-h4 fw4">Add Tags</h4>
-                <tags-input ng-model="tags" displayProperty="tagName">
+                <tags-input add-from-autocomplete-only="true" placeholder="Add Tags" allowLeftoverText="false" ng-model="tags" displayProperty="tagName">
                     <auto-complete source="loadTags($query)"></auto-complete>
                 </tags-input>
             </div>
