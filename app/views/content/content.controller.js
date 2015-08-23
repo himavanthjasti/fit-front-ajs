@@ -3,40 +3,6 @@ var apps = angular
     .module('app')
     .controller('ContentController', ContentController);
 
-    apps.config(function ($provide) {
-
-        $provide.decorator('taOptions', ['taRegisterTool', 'taToolFunctions', '$delegate', '$modal', function (taRegisterTool, taToolFunctions, taOptions, $modal) {
-            taRegisterTool('uploadImage', {
-                buttontext: '',
-                iconclass: "fa fa-image",
-                action: function (deferred,restoreSelection) {
-                    $modal.open({
-                        controller: 'UploadImageModalInstance',
-                        templateUrl: 'views/content/upload.html'
-                    }).result.then(
-                        function (result) {
-                            restoreSelection();
-                            document.execCommand('insertImage', true, result);
-                            deferred.resolve();
-                        },
-                        function () {
-                            deferred.resolve();
-                        }
-                    );
-                    return false;
-                },
-                onElementSelect: {
-                    element: 'img',
-                    action: taToolFunctions.imgOnSelectAction
-                }
-            });
-            taOptions.toolbar[1].push('uploadImage');
-            return taOptions;
-        }]);
-    })
-
-
-
     apps.controller('UploadImageModalInstance', function($scope, $cookieStore, $modalInstance, Upload, FitGlobalService){
 
         $scope.image = 'assets/images/default.png';
@@ -57,7 +23,6 @@ var apps = angular
             }).progress(function (evt) {
                 $scope.progress = parseInt(100.0 * evt.loaded / evt.total);
             }).success(function (data) {
-                console.log(data);
                 $scope.progress = 0;
                 $scope.image = data.filename;
             });
@@ -66,6 +31,10 @@ var apps = angular
         $scope.insert = function(){
             $modalInstance.close($scope.image);
         };
+
+        $scope.close = function () {
+            $modalInstance.dismiss('cancel');
+        };      
     })
 
 
@@ -81,6 +50,17 @@ var apps = angular
             $scope.role = true;
         }
 
+        $scope.show = function(){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/content/upload.html',
+                controller: 'UploadImageModalInstance',
+            }).result.then(
+                function (result) {
+                    $scope.image = result;
+                }
+            );
+            return false;
+        };
 
         $scope.tags = [];
         $scope.loadTags = function(query) {
@@ -127,7 +107,7 @@ var apps = angular
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name, 'imgURL':$scope.image};
 
             $http({
                 method: 'POST',
