@@ -194,6 +194,10 @@ footer {
     border-bottom: none;
 }
 
+.no-text-decoration{
+    text-decoration: none !important;
+}
+
 .input-lg{
     font-size: 20px;
 }
@@ -265,12 +269,18 @@ footer {
     border: 1px solid #eaeaea;
     padding: 10px;
     margin-bottom: 10px;
+    border-radius: 2px;
 }
 
 .listing-title{
     color:  #4a4a4a;
     font-size: 24px;
     font-weight: 400;
+}
+
+.listing-title > a{
+    color: #4a4a4a;
+    text-decoration: none;
 }
 
 .listing-time{
@@ -422,3 +432,14 @@ a.listing-link{
 .listing-edit-delete:hover{
     background: none !important;
 }
+
+.all-content-clickable-div{
+    cursor: pointer;
+}
+
+.sidebar-active{
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+

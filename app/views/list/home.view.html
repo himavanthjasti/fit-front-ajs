@@ -12,44 +12,28 @@
             </div>
 
             <!-- Blog Entries Column -->
-            <div class="col-md-3" style="margin-left: -8px;">
-
-                <div id="connectLinks">
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button mb10 flat-corner blue-button white">Compose<span class="glyphicon glyphicon-pencil white floatright" aria-hidden="true"></span></a>
-
-                    <a href="#!/allcontent" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Insights Dashboard</a>
-                    <a href="#!/notification" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Invite</a>
-                </div>
-
-                <div id="socialConnect" class="mt20">
-                    <p class="sidebar-p">Connect Accounts</p>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner mb10">Facebook</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Twitter</a>
-                </div>
-
-
-            </div>
+            <div ng-include="'views/sidebar.html'"></div>
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
                 <div ng-repeat="post in postList | orderBy:ff | filter:searchText">
                     <div class="list-div col-md-12">
-                        <p class="listing-title">{{ post.postDetails.title }}<span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
-                        <div class="btn-group listing-edit-delete" style="float: right;">
+                                <div class="col-md-12">
+                                    <p class="listing-title"><a href="#!/post/{{post.postDetails.id}}"> {{ post.postDetails.title }} </a><span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
+                                    <div class="btn-group listing-edit-delete" style="float: right;">
 
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#!/content/{{post.postDetails.id}}">Edit</a></li>
-                                <li><a href="#!/content/{{post.postDetails.id}}">Delete</a></li>
-                            </ul>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#!/content/{{post.postDetails.id}}">Edit</a></li>
+                                            <li><a href="#!/content/{{post.postDetails.id}}">Delete</a></li>
+                                        </ul>
 
-                        </div>
-                        </p>
-                        <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
-                        <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p>
-                        <p class="listing-link"><a href="#!/post/{{post.postDetails.id}}" class="listing-link">Continue Reading</a></p>
+                                    </div>
+                                    </p>
+                                    <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
+                                    <a href="#!/posts/{{post.postDetails.id}}" class="no-text-decoration"> <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p></a>
+                                    <p class="listing-link"><a href="#!/post/{{post.postDetails.id}}" class="listing-link">Continue Reading</a></p>
+                                </div>
                         <p>
                             <span class="share-info"><span class="glyphicon glyphicon-heart social-share-icon"></span>Like<span class="social-share-separator">|</span>{{ post.postDetails.likeCount }}</span>
                             <span class="share-info ml15"><span class="glyphicon glyphicon-comment social-share-icon"></span>Comment<span class="social-share-separator">|</span>{{ post.postDetails.commentCount }}</span>

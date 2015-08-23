@@ -13,7 +13,7 @@ var apps = angular
         var practoAccountId = $cookieStore.get('practoAccountId');
         $scope.upload = function(file){
             Upload.upload({
-                url: 'http://fit.practo.local/uploads',
+                url: 'http://backend.fit1.com/uploads',
                 file: file,
                 fileFormDataName: 'myFile',
                 sendFieldsAs: 'form',
@@ -217,7 +217,7 @@ var apps = angular
 
     apps.controller('GetAllPostController', GetAllPostController);
 
-    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams) {
+    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams, $location) {
 
         var practoAccountId = $cookieStore.get('practoAccountId');
 
@@ -226,6 +226,15 @@ var apps = angular
         } else {
             var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1';
         }
+
+
+        $scope.init = function () {
+            console.log('came to previousPost init');
+            //$scope.notifications = [];
+            //$scope.notifications.push('sidebar-active');
+            var myEl = angular.element( document.querySelector( '#previousPost' ) );
+            myEl.addClass('sidebar-active');
+        };
 
 
         $http.get(url, { cache: true}).success(function(data){
@@ -266,6 +275,15 @@ var apps = angular
                     $scope.ff = 'postDetails.likeCount';
                 }
             }, true);
+
+
+            $scope.viewPost = function(postId) {
+                //console.log(postId);
+                console.log('http://frontend.fit1.com/#!/posts/'+postId);
+                //$location.url('http://frontend.fit1.com/#!/posts/'+postId);
+            };
+
+
         });
 
         $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {

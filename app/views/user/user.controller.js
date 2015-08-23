@@ -60,6 +60,22 @@ function GetNotificationController($scope, $http, FitGlobalService, $cookieStore
         //console.log(data.postlist);
     });
 
+
+    $scope.init = function () {
+        console.log('came to notification init');
+        //$scope.notifications = [];
+        //$scope.notifications.push('sidebar-active');
+        var myEl = angular.element( document.querySelector( '#notifications' ) );
+        myEl.addClass('sidebar-active');
+    };
+
+    $scope.myClass = [];
+    $scope.addClass = function() {
+        console.log('came to notification scope');
+        $scope.myClass.push('sidebar-active');
+    }
+
+
     $scope.getNotificationData = function(){
         $http.get(FitGlobalService.baseUrl+'user/notifications?practoAccountId='+practoAccountId).success(function(data) {
             $scope.notificationList = data.UserNotificationsList;

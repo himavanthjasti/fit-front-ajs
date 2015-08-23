@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : 'http://fit.practo.local/'
+            baseUrl : 'http://backend.fit1.com/'
         };
     });
 
@@ -60,7 +60,9 @@
             .when('/notification', {
                 controller: 'GetNotificationController',
                 templateUrl: 'views/user/notification.view.html',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                desc:  'Notifications',
+                activeMenu: 'notifications'
             })
             .when('/login', {
                 controller: 'LoginController',
@@ -88,6 +90,9 @@
                 return taOptions;
             }
         ]);
+
+
+
     }
 
 
@@ -103,7 +108,7 @@
         $rootScope.$on('$routeChangeSuccess', function() {
             $rootScope.desc = $route.current.desc;
         });
-        $rootScope.backendUrl = "http://fit.practo.local/";
+        $rootScope.backendUrl = "http://backend.fit1.com/";
 
 
     }
@@ -111,3 +116,15 @@
 
 
 })();
+
+
+
+angular.module("app").directive("sidebar", function() {
+    return {
+        restrict: 'A',
+        templateUrl: 'views/sidebar.html',
+        scope: true,
+        transclude : false,
+        controller: 'FooterController'
+    };
+});

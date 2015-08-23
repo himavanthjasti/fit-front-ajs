@@ -12,32 +12,26 @@
             </div>
 
             <!-- Blog Entries Column -->
-            <div class="col-md-3" style="margin-left: -8px;">
-
-                <div id="connectLinks">
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button mb10 flat-corner blue-button white">Compose<span class="glyphicon glyphicon-pencil white floatright" aria-hidden="true"></span></a>
-
-                    <a href="#!/allcontent" class="btn btn-default sdbtn left-sidebar-button flat-corner">Previous Posts</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Insights Dashboard</a>
-                    <a href="#!/notification" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Notifications</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner open-top">Invite</a>
-                </div>
-
-                <div id="socialConnect" class="mt20">
-                    <p class="sidebar-p">Connect Accounts</p>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner mb10">Facebook</a>
-                    <a href="#!/content" class="btn btn-default sdbtn left-sidebar-button flat-corner">Twitter</a>
-                </div>
-
-
-            </div>
+            <div ng-include="'views/sidebar.html'"></div>
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
                 <p class="previous-posts">Go back to see all posts</p>
                 <div class="list-div col-md-12" ng-show="postData.title != null">
 
-                    <p class="listing-title">{{postData.title}}<span class="pbtn-info ml15">under review</span><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></p>
+                    <p class="listing-title">{{postData.title}}<span class="pbtn-info ml15">{{ postData.publishStatus}}</span>
+
+                    <div class="btn-group listing-edit-delete" style="float: right;">
+
+                        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#!/content/{{postData.id}}">Edit</a></li>
+                            <li><a href="#!/content/{{postData.id}}">Delete</a></li>
+                        </ul>
+
+                    </div>
+
+                    </p>
                     <p class="listing-time">4 Hours Ago</p>
                     <div class="desc" ng-bind-html="postContent"></div>
                     <p>
