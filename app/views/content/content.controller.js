@@ -113,6 +113,14 @@ var apps = angular
             console.log('Rating selected: ' + rating);
         };
 
+        $scope.openGuideline = function() {
+
+            $modal.open({
+                controller: 'GetGuidelineController',
+                templateUrl: 'views/content/guideline.html'
+            });
+        }
+
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
 
@@ -181,6 +189,14 @@ var apps = angular
         };
     }
 
+    apps.controller('GetGuidelineController', GetGuidelineController);
+    function GetGuidelineController($scope, $http, FitGlobalService) {
+
+        $http.get(FitGlobalService.baseUrl+'guidelines').success(function(data){
+            $scope.guidelines = data.Guidelines;
+        });
+
+    }
 
     apps.controller('GetPostController', GetPostController);
 
