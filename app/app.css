@@ -50,3 +50,10 @@ ul.rating {
 .rating .filled {
   color: #21568b ;
 }
+
+.upload {
+  width: 800px;
+  height: 200px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
