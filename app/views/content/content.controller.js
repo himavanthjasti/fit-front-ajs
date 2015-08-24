@@ -13,7 +13,7 @@ var apps = angular
         var practoAccountId = $cookieStore.get('practoAccountId');
         $scope.upload = function(file){
             Upload.upload({
-                url: 'http://backend.fit1.com/uploads',
+                url: FitGlobalService.baseUrl+'uploads',
                 file: file,
                 fileFormDataName: 'myFile',
                 sendFieldsAs: 'form',
@@ -80,9 +80,10 @@ var apps = angular
 
         $scope.publishOptions = {
             stores: [
-                {id : 1, name : 'REVIEW' },
+                {id : 1, name : 'UNDER REVIEW' },
                 {id : 2, name : 'DRAFT' },
-                {id : 3, name : 'PUBLISHED'}
+                {id : 3, name : 'PUBLISHED'},
+                {id : 4, name : 'DELETED'}
             ]
         };
 
@@ -181,6 +182,35 @@ var apps = angular
 
     }
 
+    apps.controller('DeleteConfirmation', DeleteConfirmation);
+    function DeleteConfirmation($scope, $http, FitGlobalService, $cookieStore, $modalInstance, postId) {
+        var fitToken = $cookieStore.get('fitToken');
+        var practoAccountId = $cookieStore.get('practoAccountId');
+        $scope.delete = function(value) {
+            if(value =='yes')
+            {
+                var datax = { 'softDeleted' : 1,'practo_account_id':practoAccountId};
+
+                $http({
+                    method: 'PATCH',
+                    url: FitGlobalService.baseUrl+"posts/"+postId,
+                    data: $.param(datax),
+                    headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+                }).success(function () {
+                    $location.path('/allcontent');
+                });
+            }
+            else
+            {
+                $modalInstance.dismiss('cancel');
+            }
+
+        }
+
+
+
+    }
+
     apps.controller('GetPostController', GetPostController);
 
     function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore) {
@@ -219,85 +249,44 @@ var apps = angular
 
     apps.controller('GetAllPostController', GetAllPostController);
 
-    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams, $location) {
+    function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams, $location, $modal) {
 
         var practoAccountId = $cookieStore.get('practoAccountId');
 
         if($routeParams.tagId){
             var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1&tagId='+$routeParams.tagId;
+            getAllPosts(url);
         } else {
             var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1';
+            getAllPosts(url);
         }
 
-
         $scope.init = function () {
-            console.log('came to previousPost init');
-            //$scope.notifications = [];
-            //$scope.notifications.push('sidebar-active');
             var myEl = angular.element( document.querySelector( '#previousPost' ) );
-            myEl.addClass('sidebar-active');
+            myEl.removeClass('sidebar-active');
         };
 
         $scope.dataLoading = true;
 
-        $http.get(url, { cache: true}).success(function(data){
-            $scope.postList = data.postlist;
-            $scope.total = data.count;
-            $scope.sortOptions = {
-                stores: [
-                    {id : 1, name : 'Status' },
-                    {id : 2, name : 'Created At' },
-                    {id : 3, name : 'Modified At'},
-                    {id : 4, name : 'View Count'},
-                    {id : 5, name : 'Like Count'}
-                ]
-            };
+        $scope.getPostbyFitler = function(publishStatus) {
 
-            $scope.sortItem = {
-                store: $scope.sortOptions.stores[0]
-            };
+            var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=2&page=1&publishStatus='+publishStatus;
+            getAllPosts(url);
+            if(publishStatus == 'DRAFT')
+            {
+                $scope.draft = true;
+            }
+            else
+            {
+                $scope.draft = false;
+            }
 
-            $scope.dataLoading = false;
-            $scope.reverse = true;
-
-            $scope.$watch('sortItem', function () {
-                console.log($scope.sortItem);
-                if ($scope.sortItem.store.id === 1) {
-                    $scope.reverse = true;
-                    $scope.ff = 'postDetails.publishStatus';
-                } else if ($scope.sortItem.store.id === 2) {
-                    $scope.reverse = false;
-                    $scope.ff = 'postDetails.createdAt';
-                } else if ($scope.sortItem.store.id === 3) {
-                    $scope.reverse = true;
-                    $scope.ff = 'postDetails.modifiedAt';
-                } else if ($scope.sortItem.store.id === 4) {
-                    $scope.reverse = true;
-                    $scope.ff = 'postDetails.viewCount'
-                } else {
-                    $scope.reverse = false;
-                    $scope.ff = 'postDetails.likeCount';
-                }
-            }, true);
-
-
-            $scope.viewPost = function(postId) {
-                //console.log(postId);
-                console.log('http://frontend.fit1.com/#!/posts/'+postId);
-                //$location.url('http://frontend.fit1.com/#!/posts/'+postId);
-            };
-
-
-        });
-
-        $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
-            //console.log({text, page, pageSize, total});
-            $scope.dataLoading = true;
-            $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit='+pageSize+'&page='+page, { cache: true}).success(function(data){
+        };
+        function getAllPosts(url)
+        {
+            $http.get(url, { cache: true}).success(function(data){
                 $scope.postList = data.postlist;
                 $scope.total = data.count;
-                $scope.dataLoading = false;
-
                 $scope.sortOptions = {
                     stores: [
                         {id : 1, name : 'Status' },
@@ -312,6 +301,7 @@ var apps = angular
                     store: $scope.sortOptions.stores[0]
                 };
 
+                $scope.dataLoading = false;
                 $scope.reverse = true;
 
                 $scope.$watch('sortItem', function () {
@@ -334,7 +324,34 @@ var apps = angular
                     }
                 }, true);
             });
+        }
+
+        $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
+            $scope.dataLoading = true;
+            if($scope.draft == true)
+            {
+                var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit='+pageSize+'&page='+page+'&publishStatus=DRAFT';
+            }
+            else
+            {
+                var url = FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit='+pageSize+'&page='+page;
+            }
+
+            getAllPosts(url);
         };
+
+        $scope.openConfirmation = function(postId) {
+
+            $modal.open({
+                controller: 'DeleteConfirmation',
+                templateUrl: 'views/content/confirmationBox.html',
+                resolve: {
+                    postId: function () {
+                        return postId;
+                    }
+                }
+            });
+        }
 
 
     }
@@ -391,17 +408,20 @@ var apps = angular
             }
             var tag_string_name = arr.join();
 
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name};
+            var imgUrl = $scope.postImg;
 
-            $http({
+            console.log(imgUrl);
+
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name,'posturl':imgUrl};
+
+           /* $http({
                 method: 'PATCH',
                 url: FitGlobalService.baseUrl+"posts/"+postId,
                 data: $.param(datax),
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
-                //$location.path("/allcontent").reload(true);
                 $location.path('/allcontent');
-            });
+            });*/
 
         }
 

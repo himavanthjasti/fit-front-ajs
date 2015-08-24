@@ -28,7 +28,7 @@
                                         <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="#!/content/{{post.postDetails.id}}">Edit</a></li>
-                                            <li><a href="#!/content/{{post.postDetails.id}}">Delete</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="openConfirmation(post.postDetails.id);">Delete</a></li>
                                         </ul>
 
                                     </div>
