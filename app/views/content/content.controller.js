@@ -50,7 +50,7 @@ var apps = angular
             $scope.role = true;
         }
 
-        $scope.image = 'assets/images/default.png'
+        $scope.image = 'assets/images/default-post-image.jpg'
 
         $scope.show = function(){
             var modalInstance = $modal.open({

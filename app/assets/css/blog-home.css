@@ -393,7 +393,7 @@ a.listing-link{
 
 .tags {
     border: 1px solid #f6f6f6 !important;
-    height: 46px !important;
+    min-height: 46px !important;
     padding: 7px 6px !important;
     box-shadow: none !important;
 }
@@ -446,6 +446,11 @@ a.listing-link{
     width: 225px;
     height: 48px;
     background-color: #fff;
+    color: #c0c0c0;
+    border: 1px solid #c0c0c0;
+}
+
+.submit-button:hover{
     color: #02a6d8;
     border: 1px solid #02a6d8;
 }
@@ -486,5 +491,87 @@ tags-input.ng-invalid .tags {
     -webkit-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
     -moz-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
     box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6) !important;
+    border-color: #FA787E !important;
 }
 
+
+.form-control::-webkit-input-placeholder { color: #c0c0c0; font-weight: 200; }
+.form-control:-moz-placeholder { color: #c0c0c0; font-weight: 200 }
+.form-control::-moz-placeholder { color: #c0c0c0;font-weight: 200 }
+.form-control:-ms-input-placeholder { color: #c0c0c0;font-weight: 200 }
+
+.form-control:focus {
+    border-color: none !important;
+    outline: 0;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.placeholder-text{
+    color: #c0c0c0;
+    font-weight: 200;
+    font-size: 16px;
+}
+
+.ta-root.focussed > .ta-scroll-window.form-control {
+    border-color: none !important;
+    outline: 0;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.ta-scroll-window.form-control {
+    border-color: none !important;
+    outline: 0;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.ta-editor {
+    border-radius: 0px;
+}
+
+.ng-invalid{
+    border-color:#FA787E;
+}
+
+.image-div{
+    padding: 7px;
+    float: right;
+    border: 1px solid #c0c0c0;
+    border-radius: 3px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.image-div:hover{
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.camera-span{
+    font-size: 18px;
+    color: #333;
+    margin-top: -3px;
+}
+
+.ta-editor{
+    height: 300px !important;
+}
+
+.ta-scroll-window > .ta-bind{
+    height: auto;
+    min-height: 298px !important;
+    padding: 6px 12px;
+}
+
+.ta-scroll-window > .ta-bind:hover{
+    border-color: none !important;
+    outline: 0;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}

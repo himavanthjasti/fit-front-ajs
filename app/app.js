@@ -82,10 +82,9 @@
                 // $delegate is the taOptions we are decorating
                 // here we override the default toolbars specified in taOptions.
                 taOptions.toolbar = [
-                    ['clear', 'h1', 'h2', 'h3'],
-                    ['ul', 'ol'],
                     ['bold', 'italics','underline'],
-                    ['insertLink', 'insertVideo']
+                    ['ul', 'ol'],
+                    ['clear']
                 ];
                 return taOptions;
             }
