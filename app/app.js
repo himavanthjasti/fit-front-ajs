@@ -38,7 +38,9 @@
             .when('/content/:postId', {
                 controller: 'ContentController',
                 templateUrl: 'views/content/updatePost.view.html',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                desc: 'Editing Article'
+
             })
             .when('/allcontent', {
                 controller: 'ContentController',
