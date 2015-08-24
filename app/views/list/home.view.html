@@ -16,10 +16,13 @@
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
+                <div ng-if="dataLoading" style="width: 40px; position: relative; margin: 30px auto;">
+                    <img src="assets/images/loader.gif">
+                </div>
                 <div ng-repeat="post in postList | orderBy:ff | filter:searchText">
-                    <div class="list-div col-md-12">
-                                <div class="col-md-12">
-                                    <p class="listing-title"><a href="#!/post/{{post.postDetails.id}}"> {{ post.postDetails.title }} </a><span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
+                    <div class="list-div col-md-12" ng-if="dataLoading == false">
+                                <div class="col-md-12 mlminu10">
+                                    <p class="listing-title"><span class="page-title-span"><a href="#!/post/{{post.postDetails.id}}"> {{ post.postDetails.title }} </a></span><span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
                                     <div class="btn-group listing-edit-delete" style="float: right;">
 
                                         <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
@@ -31,19 +34,21 @@
                                     </div>
                                     </p>
                                     <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
-                                    <a href="#!/posts/{{post.postDetails.id}}" class="no-text-decoration"> <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p></a>
+                                    <a href="#!/post/{{post.postDetails.id}}" class="no-text-decoration"> <p class="listing-p" ng-bind-html="post.postDetails.contentTxt"></p></a>
                                     <p class="listing-link"><a href="#!/post/{{post.postDetails.id}}" class="listing-link">Continue Reading</a></p>
                                 </div>
-                        <p>
+                        <p class="mb0">
                             <span class="share-info"><span class="glyphicon glyphicon-heart social-share-icon"></span>Like<span class="social-share-separator">|</span>{{ post.postDetails.likeCount }}</span>
                             <span class="share-info ml15"><span class="glyphicon glyphicon-comment social-share-icon"></span>Comment<span class="social-share-separator">|</span>{{ post.postDetails.commentCount }}</span>
                             <span class="share-info ml15"><span class="glyphicon glyphicon-share-alt social-share-icon"></span>Share<span class="social-share-separator">|</span>{{ post.postDetails.shareCount }}</span>
                         </p>
                     </div>
                 </div>
+
+                <div ng-show="post.length > 0">dsdsdsd</div>
                 <input type="hidden" ng-model="currentPage" ng-init="currentPage = 1">
                 <input type="hidden" ng-model="pageSize" ng-init="pageSize = 2">
-                <input type="hidden" ng-model="total" ng-init="total = 20">
+                <input type="hidden" ng-model="total" ng-init="total = 0">
                 <input type="hidden" ng-model="dots" ng-init="dots = '...'">
                 <input type="hidden" ng-model="adjacent" ng-init="adjacent = 2">
                 <input type="hidden" ng-model="ulClass" ng-init="ulClass = 'pagination'">
@@ -57,7 +62,7 @@
                         adjacent="{{adjacent}}"
                         dots="{{dots}}"
                         scroll-top="{{scrollTop}}"
-                        hide-if-empty="{{hideIfEmpty}}"
+                        hide-if-empty="'true'"
                         ul-class="{{ulClass}}"
                         active-class="{{activeClass}}"
                         disabled-class="{{disabledClass}}"

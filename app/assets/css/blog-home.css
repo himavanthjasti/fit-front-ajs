@@ -106,6 +106,14 @@ footer {
     margin-top: 20px;
 }
 
+.mb0{
+    margin-bottom: 0px;
+}
+
+.mb5{
+    margin-bottom: 5px;
+}
+
 .mb10{
     margin-bottom: 10px;
 }
@@ -186,6 +194,14 @@ footer {
     border-radius: 0px;
 }
 
+.paddingleftzero{
+    padding-left: 0px;
+}
+
+.paddingrightzero{
+    padding-right: 0px;
+}
+
 .open-top{
     border-top: none;
 }
@@ -219,6 +235,16 @@ footer {
 .page-title{
     font-size: 28px;
     font-weight: 200;
+}
+
+.page-title-span{
+    width: 515px;
+    float: left;
+}
+
+.page-title-span > a{
+    color: #4a4a4a;
+    text-decoration: none;
 }
 
 .sidebar-cust{
@@ -376,13 +402,26 @@ a.listing-link{
     color: #7f7f7f;
 }
 
+.post-details-tag-style::before {
+    content: "#";
+}
+
 .post-details-tag-style{
     padding: 3px 8px;
-    background-color: #77d4f1;
+    background-color: #D7F3FA;
     margin-right: 10px;
     color: #02a6d8;
     border: 1px solid #02a6d8;
     font-size: 12px;
+}
+
+.post-details-tag-style-link{
+    text-decoration: none !important;
+}
+
+.post-details-tag-style:hover{
+    border: 1px solid #0f596d;
+    text-decoration: none !important;
 }
 
 .post-details-viewed{

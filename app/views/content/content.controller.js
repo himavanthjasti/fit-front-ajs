@@ -187,7 +187,9 @@ var apps = angular
         var postId = $routeParams.postId;
         var fitToken = $cookieStore.get('fitToken');
         var practoAccountId = $cookieStore.get('practoAccountId');
+        $scope.dataLoading = true;
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
+            $scope.dataLoading = false;
             $scope.postData = data.postlist[0].postDetails;
             //console.log($scope.postData);
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
@@ -236,6 +238,7 @@ var apps = angular
             myEl.addClass('sidebar-active');
         };
 
+        $scope.dataLoading = true;
 
         $http.get(url, { cache: true}).success(function(data){
             $scope.postList = data.postlist;
@@ -254,6 +257,7 @@ var apps = angular
                 store: $scope.sortOptions.stores[0]
             };
 
+            $scope.dataLoading = false;
             $scope.reverse = true;
 
             $scope.$watch('sortItem', function () {
@@ -288,9 +292,11 @@ var apps = angular
 
         $scope.DoCtrlPagingAct = function(text, page, pageSize, total) {
             //console.log({text, page, pageSize, total});
+            $scope.dataLoading = true;
             $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit='+pageSize+'&page='+page, { cache: true}).success(function(data){
                 $scope.postList = data.postlist;
                 $scope.total = data.count;
+                $scope.dataLoading = false;
 
                 $scope.sortOptions = {
                     stores: [

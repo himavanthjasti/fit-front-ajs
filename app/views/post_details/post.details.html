@@ -16,10 +16,13 @@
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
-                <p class="previous-posts">Go back to see all posts</p>
+                <a href="#!/allcontent"> <p class="previous-posts">Go back to see all posts</p></a>
+                <div ng-if="dataLoading" style="width: 40px; position: relative; margin: 30px auto;">
+                    <img src="assets/images/loader.gif">
+                </div>
                 <div class="list-div col-md-12" ng-show="postData.title != null">
 
-                    <p class="listing-title">{{postData.title}}<span class="pbtn-info ml15">{{ postData.publishStatus}}</span>
+                    <p class="listing-title">{{postData.title}}<span class="pbtn-info ml15" style="display: none;">{{ postData.publishStatus}}</span>
 
                     <div class="btn-group listing-edit-delete" style="float: right;">
 
@@ -32,7 +35,8 @@
                     </div>
 
                     </p>
-                    <p class="listing-time">4 Hours Ago</p>
+                    <p class="listing-time">{{ postData.createdAt | fromNow }}</p>
+                    <div class="mb10"><img src="{{ postData.postUrl }}" style="width: 685px;"></div>
                     <div class="desc" ng-bind-html="postContent"></div>
                     <p>
                         <span class="share-info"><span class="glyphicon glyphicon-heart social-share-icon"></span>Like<span class="social-share-separator">|</span>{{postData.likeCount}}</span>
@@ -45,7 +49,7 @@
                     <p class="fw4 fs14 post-details-tags">
                         <span class="mr20">Tags</span>
                         <span ng-repeat="tag in postData.tags">
-                            <a href="#!/tag/{{tag.id}}"><span class="post-details-tag-style">{{tag.tagName}} </span></a>
+                            <a href="#!/tag/{{tag.id}}" class="post-details-tag-style-link"><span class="post-details-tag-style">{{tag.tagName}} </span></a>
                         </span>
                     </p>
                     <hr class="mrminus10 mlminu10">
@@ -53,28 +57,31 @@
 
                     <div class="comments" ng-repeat="comment in postData.comments">
                         <div class="row mt15">
-                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                            <div class="col-lg-2" style="margin-left: 5px; margin-right: -5px;">
                                 <img class="img-responsive img-circle" src="https://practo-fabric.s3.amazonaws.com/55bb61c4002b993d467bcaff0bec41709c89e9541885f.jpg" width="40" alt="">
                             </div>
-                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9  paddingleftzero shdivsp">
+                            <div class="col-lg-8 paddingleftzero shdivsp" style="margin-left: -6.33333333%; margin-right: 6.33333333%">
                                 <p class="greysdark fw4 fs16">{{comment.name}}</p>
-                                <p class="greylight fw3 fs14 mtminus5">{{comment.createdAt | fromNow}}</p>
+                                <p class="greylight fw3 fs14 mtminus10">{{comment.createdAt | fromNow}}</p>
                             </div>
-                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 paddingleftzero">
-                                <span class="glyphicon glyphicon-info-sign fs17 greylight floatleft"></span>
+                            <div class="col-md-1 paddingleftzero">
+                                <span class="glyphicon glyphicon-info-sign fs17 greylight floatright"></span>
+                            </div>
+                            <div class="col-md-1 paddingleftzero">
                                 <span class="glyphicon glyphicon-flag fs17 greylight floatright"></span>
                             </div>
                         </div>
-                        <p class="fs16 fw4">{{comment.commentTxt}}</p>
+                        <p class="fs16 fw4 greydark">{{comment.commentTxt}}</p>
+                        <hr>
 
                     </div>
 
                     <p ng-show="postData.comments.length == 0">
-                        No Comments yet in this  post.
+                        No Comments yet on this  post.
                     </p>
-                    <div class="input-group" ng-show="postData.comments.length > 0">
-                        <input ng-model="postComment" type="text" class="form-control" aria-label="Write a comment..." style="border-right: none;">
-                        <span class="input-group-addon btn btn-primary" style="background-color: #fff; color:#bbb;font-weight:600; border-left: none;" ng-click="postCommentAction()">POST</span>
+                    <div class="input-group mtminus10" ng-show="postData.comments.length > 0">
+                        <input ng-model="postComment" type="text" class="form-control" placeholder="Write a Comment" aria-label="Write a comment..." style="border-right: none; background-color: #f6f6f6; border-radius: 2px;">
+                        <span class="input-group-addon btn btn-primary" style="background-color: #f6f6f6; color:#bbb;font-weight:600; border-left: none; border-radius: 2px;" ng-click="postCommentAction()">POST</span>
                     </div>
 
                 </div>
