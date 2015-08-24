@@ -400,8 +400,7 @@ var apps = angular
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
                 //$location.path("/allcontent").reload(true);
-
-                $window.location.href = "/";
+                $location.path('/allcontent');
             });
 
         }

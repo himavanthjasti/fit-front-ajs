@@ -482,3 +482,9 @@ a.listing-link{
     border-color: #adadad;
 }
 
+tags-input.ng-invalid .tags {
+    -webkit-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
+    -moz-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
+    box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6) !important;
+}
+
