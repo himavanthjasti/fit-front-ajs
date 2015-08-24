@@ -3,7 +3,7 @@
 
 
     angular
-        .module('app', ['ngRoute', 'ngCookies','textAngular','brantwills.paging','tagService','ui.bootstrap','ngFileUpload','ngTagsInput','angular-jwt','angularModalService'])
+        .module('app', ['ngRoute', 'ngCookies','textAngular','brantwills.paging','tagService','ui.bootstrap','ngFileUpload','ngTagsInput','angular-jwt','angularModalService','chartjs','smart-table'])
         .config(config)
         .run(run);
 
@@ -74,6 +74,11 @@
             .when('/tag/:tagId', {
                 controller: 'ContentController',
                 templateUrl: 'views/list/home.view.html',
+                controllerAs: 'vm'
+            })
+            .when('/insights', {
+                controller: 'InsightsController',
+                templateUrl: 'views/content/insights.view.html',
                 controllerAs: 'vm'
             })
 

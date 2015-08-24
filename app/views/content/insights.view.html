@@ -1,0 +1,53 @@
+<div class="row">
+
+</div>
+
+
+<div class="col-lg-10 col-lg-offset-1">
+
+            <div class="col-md-12" style="margin-left: -8px;">
+                <span class="mt15 floatleft navigation-span ml5">All Profiles</span>
+                <span class="mt15 floatleft navigation-span ml20">Appointments</span>
+                <span class="mt15 floatleft navigation-span ml20">Author</span>
+                <hr class="clear mrminus15">
+            </div>
+
+            <!-- Blog Entries Column -->
+            <div ng-include="'views/sidebar.html'"></div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div class="col-md-9">
+                <p class="pull-left">Views recorder for your posts last month..</p>
+                <div class="btn-group pull-right">
+        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Week'" uncheckable>Week</label>
+        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Month'" uncheckable>Month</label>
+        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Quarter'" uncheckable>Quarter</label>
+    </div>
+            	<cjs-bar dataset="someData" options="someOptions" segement-stroke-width="5" style="margin-top: 10px"></cjs-bar>
+                <hr>
+                <br>
+                <p>Insights on your recent posts!</p>
+                <table st-table="rowCollection" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Published at</th>
+                            <th>Post</th>
+                            <th>Views</th>
+                            <th>Likes</th>
+                            <th>Comments</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in rowCollection">
+                            <td>{{row.publishedAt}}</td>
+                            <td>{{row.post}}</td>
+                            <td>{{row.views}}</td>
+                            <td>{{row.likes}}</td>
+                            <td>{{row.likes}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+

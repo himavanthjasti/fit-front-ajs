@@ -38,7 +38,7 @@ var apps = angular
 
 
     apps.controller('ContentController', ContentController).directive('starRating', starRating);
-    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal) {
+    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal, $rootScope) {
 
         var role = $cookieStore.get('practoFitRole');
         var fitToken = $cookieStore.get('fitToken');
@@ -107,12 +107,6 @@ var apps = angular
 
         // Our form data for creating a new post with ng-model
         $scope.createPost = function() {
-
-            /*$modal.open({
-                controller: 'UploadImageModalInstance',
-                templateUrl: 'views/content/shareModel.html'
-            });*/
-
             var tag_arr = $scope.tags;
             var arr = [];
             for (var key in tag_arr) {
@@ -126,9 +120,104 @@ var apps = angular
                 url: FitGlobalService.baseUrl+"posts",
                 data: $.param(datax), 
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function () {});
+            }).success(function (data) {
+
+            });
 
         }
+
+
+        $scope.autoSave = function(data){
+
+            $http({
+                method: 'POST',
+                url: FitGlobalService.baseUrl+"posts",
+                data: $.param(datax),
+                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+            }).success(function (data) {
+                $scope.postId = data.content.postlist[0].postDetails.id;
+
+                setInterval($scope.getNotificationData, 10000);
+
+            });
+
+        }
+
+        //setInterval($scope.saveDraft($scope.postId), 3000);
+        setInterval(function(){
+            var postId = $scope.postId;
+            if((typeof $scope.postTitle !== 'undefined' || typeof $scope.htmlVariable !== 'undefined') || typeof postId === 'undefined') {
+
+                if(postId)
+                {
+                    console.log(postId);
+                    var tag_arr = $scope.tags;
+                    var arr = [];
+                    for (var key in tag_arr) {
+                        arr.push(tag_arr[key].id);
+                    }
+                    var tag_string_name = arr.join();
+
+                    var datax = {
+                        'title': $scope.postTitle,
+                        'practo_account_id': practoAccountId,
+                        'content': $scope.htmlVariable,
+                        'publishStatus': 'DRAFT',
+                        'tagid': tag_string_name,
+                        'imgURL': $scope.image
+                    };
+
+                    $http({
+                        method: 'PATCH',
+                        url: FitGlobalService.baseUrl + "posts/"+postId,
+                        data: $.param(datax),
+                        headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+                    }).success(function (data) {
+                       // $rootScope.postId = data.content.postlist[0].postDetails.id;
+
+                    });
+                }
+                else
+                {
+                    console.log(postId);
+                    var tag_arr = $scope.tags;
+                    var arr = [];
+                    for (var key in tag_arr) {
+                        arr.push(tag_arr[key].id);
+                    }
+                    var tag_string_name = arr.join();
+
+                    var datax = {
+                        'title': $scope.postTitle,
+                        'practo_account_id': practoAccountId,
+                        'content': $scope.htmlVariable,
+                        'publishStatus': 'DRAFT',
+                        'tagid': tag_string_name,
+                        'imgURL': $scope.image
+                    };
+
+                    $http({
+                        method: 'POST',
+                        url: FitGlobalService.baseUrl + "posts",
+                        data: $.param(datax),
+                        headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+                    }).success(function (data) {
+                        $rootScope.postId = data.content.postlist[0].postDetails.id;
+
+                    });
+                }
+
+            }
+
+        }, 10000);
+
+        $scope.saveDraft = function(postId) {
+
+
+
+
+        }
+
 
     }
 
@@ -221,7 +310,7 @@ var apps = angular
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
             $scope.dataLoading = false;
             $scope.postData = data.postlist[0].postDetails;
-            //console.log($scope.postData);
+
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
 
@@ -240,6 +329,7 @@ var apps = angular
                     $scope.postData = data.postlist[0].postDetails;
                     $scope.postContent = data.postlist[0].postDetails.contentTxt;
                     $scope.postComment = null;
+
                 });
             });
 
@@ -427,3 +517,76 @@ var apps = angular
 
 
     }
+apps.controller('InsightsController', InsightsController);
+
+function InsightsController($scope, $cookieStore, $http, FitGlobalService) {
+
+    var practoAccountId = $cookieStore.get('practoAccountId');
+    var limit = 10;
+    $scope.someData = {
+        labels: [],
+        datasets: [{
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,1)",
+            pointColor : "rgba(151,187,205,1)",
+            pointStrokeColor : "#fff",
+            //       fillColor : "rgba(220,220,220,0.5)",
+            // strokeColor : "rgba(220,220,220,1)",
+            // pointColor : "rgba(220,220,220,1)",
+            // pointStrokeColor : "#fff",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            responsive: false,
+
+            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+            maintainAspectRatio: true,
+            data: []
+        }]
+    };
+
+    $scope.someOptions = {
+        //segementStrokeWidth: 20,
+        //segmentStrokeColor: '#000',
+        //    fillColor : "rgba(151,187,205,0.5)",
+        // strokeColor : "rgba(151,187,205,1)",
+        // pointColor : "rgba(151,187,205,1)",
+        // pointStrokeColor : "#fff",
+        // highlightFill: "rgba(220,220,220,0.75)",
+        //   highlightStroke: "rgba(220,220,220,1)",
+    };
+
+    $scope.colours = null;
+
+    $scope.rowCollection = [];
+
+    $http.get(FitGlobalService.baseUrl+'insights?practoAccountId='+practoAccountId+'&limit='+limit).success(function(data){
+        console.log(data.length);
+        for(var i=0;i<data.length;i++){
+            $scope.someData.labels.push(data[i].date);
+            $scope.someData.datasets[0].data.push(data[i].viewCount);
+        }
+    });
+
+    if($scope.someData.labels.length<30){
+
+        for(var i = $scope.someData.labels.length; i<31;i++){
+            $scope.someData.labels.push(i);
+            $scope.someData.datasets[0].data.push(0);
+        }
+    }
+
+    $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=5&page=1').success(function(data){
+        console.log(data.length);
+        console.log(data);
+        for(var i=0;i<data.count;i++){
+            var datax = {'publishedAt': data.postlist[i].postDetails.publishedAt, 'post':data.postlist[i].postDetails.title, 'views':data.postlist[i].postDetails.viewCount, 'likes':data.postlist[i].postDetails.likeCount};
+            $scope.rowCollection.push(datax);
+        }
+    });
+
+    console.log($scope.someData);
+    console.log('----');
+    console.log($scope.rowCollection);
+
+}
+
