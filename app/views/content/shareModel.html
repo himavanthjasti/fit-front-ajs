@@ -2,11 +2,11 @@
 <html>
 <body>
 
-<form action="">
-    <input type="checkbox" name="share" value="facebook">Facebook<br>
-    <input type="checkbox" name="share" value="twitter">Twitter<br>
-    <button onclick="share();">Share</button>
-</form>
+<div>
+    <input type="checkbox" ng-model="checkBoxModel.fb">Facebook<br>
+    <input type="checkbox" ng-model="checkBoxModel.twitter">Twitter<br>
+    <button ng-click="share()">Share</button>
+</div>
 
 </body>
 </html>

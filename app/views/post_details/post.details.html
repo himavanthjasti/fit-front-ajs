@@ -41,7 +41,7 @@
                     <p>
                         <span class="share-info"><span class="glyphicon glyphicon-heart social-share-icon"></span>Like<span class="social-share-separator">|</span>{{postData.likeCount}}</span>
                         <span class="share-info ml15"><span class="glyphicon glyphicon-comment social-share-icon"></span>Comment<span class="social-share-separator">|</span>{{postData.commentCount}}</span>
-                        <span class="share-info ml15"><span class="glyphicon glyphicon-share-alt social-share-icon"></span>Share<span class="social-share-separator">|</span>{{postData.shareCount}}</span>
+                        <span class="share-info ml15"><span class="glyphicon glyphicon-share-alt social-share-icon" ng-click="share()"></span> Share<span class="social-share-separator">|</span>{{postData.shareCount}}</span>
                     </p>
                     <hr>
                     <p class="post-details-viewed">Post has been viewed {{postData.viewCount}} times</p>

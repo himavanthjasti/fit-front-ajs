@@ -38,7 +38,7 @@ var apps = angular
 
 
     apps.controller('ContentController', ContentController);
-    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal, $rootScope) {
+    function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal, $rootScope, $location) {
 
         var role = $cookieStore.get('practoFitRole');
         var fitToken = $cookieStore.get('fitToken');
@@ -122,7 +122,7 @@ var apps = angular
                 data: $.param(datax), 
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function (data) {
-
+                $location.path('/allcontent');
             });
 
         }
@@ -299,6 +299,22 @@ var apps = angular
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
 
+        $scope.share = function(){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/content/shareModel.html',
+                controller: 'ShareController',
+                resolve: {
+                    postId: function () {
+                        return postId;
+                    }
+                }
+            }).result.then(
+                function (result) {
+
+                }
+            );
+            return false;
+        };
 
         $scope.postCommentAction = function() {
             var data = { 'comment' : $scope.postComment,'practo_account_id':practoAccountId};
@@ -387,6 +403,26 @@ var apps = angular
 
        }
     }
+
+    apps.controller('ShareController', function($scope, $cookieStore, $modalInstance, FitGlobalService, postId, $http){
+
+        var practoAccountId = $cookieStore.get('practoAccountId');
+        $scope.checkBoxModel = {
+            fb : false,
+            twitter : false
+        };
+
+        $scope.share = function(){
+            $http.get(FitGlobalService.baseUrl+'socialshare?practoAccountId='+practoAccountId+'&postId='+postId+
+                '&fb='+$scope.checkBoxModel.fb+'&twitter='+$scope.checkBoxModel.twitter).success ( function(data) {
+                $modalInstance.dismiss('cancel');
+            });
+        };
+
+        $scope.close = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })  
 
     apps.controller('GetAllPostController', GetAllPostController);
 
