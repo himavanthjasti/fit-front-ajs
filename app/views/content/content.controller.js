@@ -114,6 +114,10 @@ var apps = angular
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
+            if($scope.saveDraft == 'YES')
+            {
+               $scope.publishStatus.store.name = 'DRAFT';
+            }
             var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name, 'postUrl':$scope.image};
 
             $http({
@@ -128,96 +132,74 @@ var apps = angular
         }
 
 
-        $scope.autoSave = function(data){
-
-            $http({
-                method: 'POST',
-                url: FitGlobalService.baseUrl+"posts",
-                data: $.param(datax),
-                headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-            }).success(function (data) {
-                $scope.postId = data.content.postlist[0].postDetails.id;
-
-                setInterval($scope.getNotificationData, 10000);
-
-            });
-
-        }
 
         //setInterval($scope.saveDraft($scope.postId), 3000);
-        setInterval(function(){
-            var postId = $scope.postId;
-            if((typeof $scope.postTitle !== 'undefined' || typeof $scope.htmlVariable !== 'undefined') || typeof postId === 'undefined') {
+        // setInterval(function(){
+        //     var postId = $scope.postId;
+        //     if((typeof $scope.postTitle !== 'undefined' || typeof $scope.htmlVariable !== 'undefined') || typeof postId === 'undefined') {
 
-                if(postId)
-                {
-                    console.log(postId);
-                    var tag_arr = $scope.tags;
-                    var arr = [];
-                    for (var key in tag_arr) {
-                        arr.push(tag_arr[key].id);
-                    }
-                    var tag_string_name = arr.join();
+        //         if(postId)
+        //         {
+        //             console.log(postId);
+        //             var tag_arr = $scope.tags;
+        //             var arr = [];
+        //             for (var key in tag_arr) {
+        //                 arr.push(tag_arr[key].id);
+        //             }
+        //             var tag_string_name = arr.join();
 
-                    var datax = {
-                        'title': $scope.postTitle,
-                        'practo_account_id': practoAccountId,
-                        'content': $scope.htmlVariable,
-                        'publishStatus': 'DRAFT',
-                        'tagid': tag_string_name,
-                        'imgURL': $scope.image
-                    };
+        //             var datax = {
+        //                 'title': $scope.postTitle,
+        //                 'practo_account_id': practoAccountId,
+        //                 'content': $scope.htmlVariable,
+        //                 'publishStatus': 'DRAFT',
+        //                 'tagid': tag_string_name,
+        //                 'imgURL': $scope.image
+        //             };
 
-                    $http({
-                        method: 'PATCH',
-                        url: FitGlobalService.baseUrl + "posts/"+postId,
-                        data: $.param(datax),
-                        headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-                    }).success(function (data) {
-                       // $rootScope.postId = data.content.postlist[0].postDetails.id;
+        //             $http({
+        //                 method: 'PATCH',
+        //                 url: FitGlobalService.baseUrl + "posts/"+postId,
+        //                 data: $.param(datax),
+        //                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        //             }).success(function (data) {
+        //                // $rootScope.postId = data.content.postlist[0].postDetails.id;
 
-                    });
-                }
-                else
-                {
-                    console.log(postId);
-                    var tag_arr = $scope.tags;
-                    var arr = [];
-                    for (var key in tag_arr) {
-                        arr.push(tag_arr[key].id);
-                    }
-                    var tag_string_name = arr.join();
+        //             });
+        //         }
+        //         else
+        //         {
+        //             console.log(postId);
+        //             var tag_arr = $scope.tags;
+        //             var arr = [];
+        //             for (var key in tag_arr) {
+        //                 arr.push(tag_arr[key].id);
+        //             }
+        //             var tag_string_name = arr.join();
 
-                    var datax = {
-                        'title': $scope.postTitle,
-                        'practo_account_id': practoAccountId,
-                        'content': $scope.htmlVariable,
-                        'publishStatus': 'DRAFT',
-                        'tagid': tag_string_name,
-                        'imgURL': $scope.image
-                    };
+        //             var datax = {
+        //                 'title': $scope.postTitle,
+        //                 'practo_account_id': practoAccountId,
+        //                 'content': $scope.htmlVariable,
+        //                 'publishStatus': 'DRAFT',
+        //                 'tagid': tag_string_name,
+        //                 'imgURL': $scope.image
+        //             };
 
-                    $http({
-                        method: 'POST',
-                        url: FitGlobalService.baseUrl + "posts",
-                        data: $.param(datax),
-                        headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
-                    }).success(function (data) {
-                        $rootScope.postId = data.content.postlist[0].postDetails.id;
+        //             $http({
+        //                 method: 'POST',
+        //                 url: FitGlobalService.baseUrl + "posts",
+        //                 data: $.param(datax),
+        //                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
+        //             }).success(function (data) {
+        //                 $rootScope.postId = data.content.postlist[0].postDetails.id;
 
-                    });
-                }
+        //             });
+        //         }
 
-            }
+        //     }
 
-        }, 10000);
-
-        $scope.saveDraft = function(postId) {
-
-
-
-
-        }
+        // }, 10000);
 
 
     }
@@ -303,7 +285,7 @@ var apps = angular
 
     apps.controller('GetPostController', GetPostController);
 
-    function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore) {
+    function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore, $modal, $location) {
         var postId = $routeParams.postId;
         var fitToken = $cookieStore.get('fitToken');
         var practoAccountId = $cookieStore.get('practoAccountId');
@@ -336,6 +318,42 @@ var apps = angular
 
 
         }
+
+        $scope.approve = function(postId){
+
+           var tag_arr = $scope.postData.tags;
+           var arr = [];
+           for (var key in tag_arr) {
+               arr.push(tag_arr[key].id);
+           }
+           var tag_string_name = arr.join();
+
+           var imgUrl = 'dummy URL';
+           var datax = { 'title' : $scope.postData.title,'practo_account_id':$scope.postData.practoAccountId,'content':$scope.postData.contentTxt,'publishStatus':'PUBLISHED','tagid':tag_string_name,'posturl':imgUrl};
+
+           $http({
+               method: 'PATCH',
+               url: FitGlobalService.baseUrl+"posts/"+postId,
+               data: $.param(datax),
+               headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+           }).success(function () {
+               $location.path('/allcontent');
+           });
+       }
+       $scope.delete = function(postId){
+           $modal.open({
+               controller: 'DeleteConfirmation',
+               templateUrl: 'views/content/confirmationBox.html',
+               resolve: {
+                   postId: function () {
+                       return postId;
+                   }
+               }
+           });
+       }
+       $scope.edit = function(postId){
+          $location.path('/content/'+postId);
+       }
     }
 
     apps.controller('GetAllPostController', GetAllPostController);
@@ -504,16 +522,25 @@ var apps = angular
 
             console.log(imgUrl);
 
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name,'postUrl':imgUrl};
+            if($scope.saveDraft == 'YES')
+           {
+               $scope.publishStatus.store.name = 'DRAFT';
+           }
+           else
+           {
+               $scope.publishStatus.store.name = 'UNDER REVIEW';
+           }
 
-           /* $http({
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'publishStatus':$scope.publishStatus.store.name,'tagid':tag_string_name,'postUrl':imgUrl};
+
+           $http({
                 method: 'PATCH',
                 url: FitGlobalService.baseUrl+"posts/"+postId,
                 data: $.param(datax),
                 headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
             }).success(function () {
                 $location.path('/allcontent');
-            });*/
+            });
 
         }
 

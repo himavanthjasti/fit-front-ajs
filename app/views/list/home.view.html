@@ -1,19 +1,15 @@
 ﻿
-
 <div class="row">
     <form ng-controller="GetAllPostController">
         <div class="col-lg-10 col-lg-offset-1">
-
             <div class="col-md-12" style="margin-left: -8px;">
                 <span class="mt15 floatleft navigation-span ml5">All Profiles</span>
                 <span class="mt15 floatleft navigation-span ml20">Appointments</span>
                 <span class="mt15 floatleft navigation-span ml20">Author</span>
                 <hr class="clear mrminus15">
             </div>
-
             <!-- Blog Entries Column -->
             <div ng-include="'views/sidebar.html'"></div>
-
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
                 <div ng-if="dataLoading" style="width: 40px; position: relative; margin: 30px auto;">
@@ -24,13 +20,11 @@
                                 <div class="col-md-12 mlminu10">
                                     <p class="listing-title"><span class="page-title-span"><a href="#!/post/{{post.postDetails.id}}"> {{ post.postDetails.title }} </a></span><span class="pbtn-info ml15">{{ post.postDetails.publishStatus}}</span>
                                     <div class="btn-group listing-edit-delete" style="float: right;">
-
                                         <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-chevron-down listing-edit-delete-icon floatright"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="#!/content/{{post.postDetails.id}}">Edit</a></li>
                                             <li><a href="javascript:void(0)" ng-click="openConfirmation(post.postDetails.id);">Delete</a></li>
                                         </ul>
-
                                     </div>
                                     </p>
                                     <p class="listing-time">{{ post.postDetails.createdAt | fromNow }}</p>
@@ -44,7 +38,6 @@
                         </p>
                     </div>
                 </div>
-
                 <div ng-show="post.length > 0">dsdsdsd</div>
                 <input type="hidden" ng-model="currentPage" ng-init="currentPage = 1">
                 <input type="hidden" ng-model="pageSize" ng-init="pageSize = 2">
@@ -69,20 +62,19 @@
                         show-prev-next="{{showPrevNext}}"
                         paging-action="DoCtrlPagingAct('Paging Clicked', page, pageSize, total)">
                 </paging>
-                <p ng-show="postList.length == 0">
+                <p ng-show="publishStatus != 'DRAFT' && postList.length == 0">
                     You haven't written any posts yet. <a href="#!/content">Add your first post now.</a>
                 </p>
+                <p ng-show="publishStatus == 'DRAFT' && postList.length == 0">
+                    Nothing to show, no Saved Drafts.
+                </p>
             </div>
-
         </div>
         <!-- /.col-10 -->
     </form>
 </div>
-
     <!-- /.row -->
-
     <hr>
-
     <!-- Footer -->
     <footer>
         <div class="row">
@@ -93,4 +85,3 @@
         </div>
         <!-- /.row -->
     </footer>
-
