@@ -70,6 +70,7 @@ var apps = angular
             var deferred = $q.defer();
             $http.get(FitGlobalService.baseUrl+'tags?tag=' + query).success(function(data){
                 var _tags = [];
+                console.log(data);
                 for(var i=0; i<data.tagList.length; i++){
                     _tags.push({id: data.tagList[i].id, text:data.tagList[i].tagName})
                 }
@@ -113,7 +114,7 @@ var apps = angular
                 arr.push(tag_arr[key].id);
             }
             var tag_string_name = arr.join();
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name, 'imgURL':$scope.image};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable, 'publishStatus':$scope.publishStatus.store.name, 'tagid':tag_string_name, 'postUrl':$scope.image};
 
             $http({
                 method: 'POST',
@@ -469,6 +470,7 @@ var apps = angular
             $scope.postData = data.postlist[0].postDetails;
             $scope.postTitle = data.postlist[0].postDetails.title;
             $scope.htmlVariable = data.postlist[0].postDetails.contentTxt;
+            $scope.image = data.postlist[0].postDetails.postUrl;
 
             var _pretags = [];
             var tagList = data.postlist[0].postDetails.tags;
@@ -502,7 +504,7 @@ var apps = angular
 
             console.log(imgUrl);
 
-            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name,'posturl':imgUrl};
+            var datax = { 'title' : $scope.postTitle,'practo_account_id':practoAccountId,'content':$scope.htmlVariable,'tagid':tag_string_name,'postUrl':imgUrl};
 
            /* $http({
                 method: 'PATCH',
@@ -523,22 +525,23 @@ function InsightsController($scope, $cookieStore, $http, FitGlobalService) {
 
     var practoAccountId = $cookieStore.get('practoAccountId');
     var limit = 10;
+    var dailyLabels = [];
+    var dailyData = [];
+    var weeklyLabels = [];
+    var weeklyData = [];
+    var monthlyLabels = [];
+    var monthlyData = [];
+
     $scope.someData = {
         labels: [],
         datasets: [{
-            fillColor : "rgba(151,187,205,0.5)",
-            strokeColor : "rgba(151,187,205,1)",
-            pointColor : "rgba(151,187,205,1)",
+            fillColor : "rgba(220,220,220,0.5)",
+            strokeColor : "rgba(220,220,220,1)",
+            pointColor : "rgba(220,220,220,1)",
             pointStrokeColor : "#fff",
-            //       fillColor : "rgba(220,220,220,0.5)",
-            // strokeColor : "rgba(220,220,220,1)",
-            // pointColor : "rgba(220,220,220,1)",
-            // pointStrokeColor : "#fff",
-            highlightFill: "rgba(220,220,220,0.75)",
-            highlightStroke: "rgba(220,220,220,1)",
+            highlightFill: "rgba(151,187,205,0.75)",
+            highlightStroke: "rgba(151,187,205,1)",
             responsive: false,
-
-            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
             maintainAspectRatio: true,
             data: []
         }]
@@ -557,36 +560,196 @@ function InsightsController($scope, $cookieStore, $http, FitGlobalService) {
 
     $scope.colours = null;
 
-    $scope.rowCollection = [];
+    $scope.radioModel = 'Daily';
 
-    $http.get(FitGlobalService.baseUrl+'insights?practoAccountId='+practoAccountId+'&limit='+limit).success(function(data){
-        console.log(data.length);
-        for(var i=0;i<data.length;i++){
-            $scope.someData.labels.push(data[i].date);
-            $scope.someData.datasets[0].data.push(data[i].viewCount);
+    $scope.$watchCollection('radioModel', function () {
+        if($scope.radioModel === 'Daily') {
+            $scope.someData.labels = dailyLabels;
+            $scope.someData.datasets[0].data = dailyData;
+        } else if($scope.radioModel === 'Weekly') {
+            $scope.someData.labels = weeklyLabels;
+            $scope.someData.datasets[0].data = weeklyData;
+        } else {
+            $scope.someData.labels = monthlyLabels;
+            $scope.someData.datasets[0].data = monthlyData;
         }
+      
     });
 
-    if($scope.someData.labels.length<30){
+    $scope.rowCollection = [];
 
-        for(var i = $scope.someData.labels.length; i<31;i++){
-            $scope.someData.labels.push(i);
-            $scope.someData.datasets[0].data.push(0);
-        }
+    $http.get(FitGlobalService.baseUrl+'insights?practoAccountId='+practoAccountId).success(function(data){
+        data = {
+  "daily": [
+    {
+      "day": "2015-08-24",
+      "viewCount": "18"
+    },
+    {
+      "day": "2015-08-23",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-22",
+      "viewCount": "7"
+    },
+    {
+      "day": "2015-08-20",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-08-19",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-18",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-17",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-16",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-15",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-13",
+      "viewCount": "12"
+    },
+    {
+      "day": "2015-08-12",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-08-11",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-08-09",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-07",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-08-06",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-05",
+      "viewCount": "9"
+    },
+    {
+      "day": "2015-08-03",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-08-02",
+      "viewCount": "15"
+    },
+    {
+      "day": "2015-08-01",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-07-30",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-07-29",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-07-28",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-07-27",
+      "viewCount": "3"
+    },
+    {
+      "day": "2015-07-26",
+      "viewCount": "6"
+    },
+    {
+      "day": "2015-07-25",
+      "viewCount": "6"
     }
+  ],
+  "weekly": [
+    {
+      "week": "34",
+      "viewCount": "24"
+    },
+    {
+      "week": "33",
+      "viewCount": "34"
+    },
+    {
+      "week": "32",
+      "viewCount": "30"
+    },
+    {
+      "week": "31",
+      "viewCount": "39"
+    },
+    {
+      "week": "30",
+      "viewCount": "21"
+    },
+    {
+      "week": "29",
+      "viewCount": "6"
+    }
+  ],
+  "monthly": [
+    {
+      "month": "8",
+      "viewCount": "130"
+    },
+    {
+      "month": "7",
+      "viewCount": "111"
+    },
+    {
+      "month": "6",
+      "viewCount": "72"
+    },
+    {
+      "month": "5",
+      "viewCount": "33"
+    }
+  ]
+};
+        
+        for(var i=0; i<data.daily.length; i++){
+            dailyLabels.push(data.daily[i].day);
+            dailyData.push(data.daily[i].viewCount);
+        }
+        for(var i=0; i<data.weekly.length; i++){
+            weeklyLabels.push(data.weekly[i].week);
+            weeklyData.push(data.weekly[i].viewCount);
+        }
+        for(var i=0; i<data.monthly.length; i++){
+            monthlyLabels.push(data.monthly[i].month);
+            monthlyData.push(data.monthly[i].viewCount);
+        }
+    });
+    console.log($scope.someData.datasets[0].data);
 
     $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&limit=5&page=1').success(function(data){
         console.log(data.length);
-        console.log(data);
         for(var i=0;i<data.count;i++){
-            var datax = {'publishedAt': data.postlist[i].postDetails.publishedAt, 'post':data.postlist[i].postDetails.title, 'views':data.postlist[i].postDetails.viewCount, 'likes':data.postlist[i].postDetails.likeCount};
+            var datax = {'publishedAt': data.postlist[i].postDetails.publishedAt, 'postId':data.postlist[i].postDetails.id, 'post':data.postlist[i].postDetails.title, 'views':data.postlist[i].postDetails.viewCount, 'likes':data.postlist[i].postDetails.likeCount};
             $scope.rowCollection.push(datax);
         }
     });
-
-    console.log($scope.someData);
-    console.log('----');
-    console.log($scope.rowCollection);
 
 }
 

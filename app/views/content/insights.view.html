@@ -17,13 +17,17 @@
 
             <!-- Blog Sidebar Widgets Column -->
             <div class="col-md-9">
-                <p class="pull-left">Views recorder for your posts last month..</p>
-                <div class="btn-group pull-right">
-        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Week'" uncheckable>Week</label>
-        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Month'" uncheckable>Month</label>
-        <label class="btn btn-success" ng-model="radioModel" btn-radio="'Quarter'" uncheckable>Quarter</label>
-    </div>
-            	<cjs-bar dataset="someData" options="someOptions" segement-stroke-width="5" style="margin-top: 10px"></cjs-bar>
+                <p class="pull-left">Views recorded for your posts last month..</p>
+                
+    <div class="btn-group pull-right">
+        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Daily'">Daily</label>
+        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Weekly'">Weekly</label>
+        <label class="btn btn-primary" ng-model="radioModel" btn-radio="'Monthly'">Monthly</label>
+    </div> 
+
+
+
+            	<cjs-bar dataset="someData" segement-stroke-width="5" style="margin-top: 10px; border:1px solid #ccc; border-spacing: 10px 10px; width: 100% !important; max-width: 800px; height: auto !important; max-height: 200px"></cjs-bar>
                 <hr>
                 <br>
                 <p>Insights on your recent posts!</p>
@@ -40,7 +44,7 @@
                         <tbody>
                         <tr ng-repeat="row in rowCollection">
                             <td>{{row.publishedAt}}</td>
-                            <td>{{row.post}}</td>
+                            <td><a href="#!/posts/{{row.postId}}">{{row.post}}</a></td>
                             <td>{{row.views}}</td>
                             <td>{{row.likes}}</td>
                             <td>{{row.likes}}</td>

@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : "http://fit.practo.local/"
+            baseUrl : "http://backend.fit1.com/"
         };
     });
 
@@ -114,7 +114,7 @@
         $rootScope.$on('$routeChangeSuccess', function() {
             $rootScope.desc = $route.current.desc;
         });
-        $rootScope.backendUrl = "http://fit.practo.local/";
+        $rootScope.backendUrl = "http://backend.fit1.com/";
 
 
     }
