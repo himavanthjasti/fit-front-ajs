@@ -11,11 +11,7 @@
                <span class="glyphicon glyphicon-camera floatright camera-span" ng-click="show()"></span>
            </div>
            <div text-angular ng-model="htmlVariable" style="margin-top: 10px;" class="ta-root flat-corner" placeholder="Your Article Here"></div>
-           <div ng-if="role">
-           <select ng-model="publishStatus.store" ng-options="item.name for item in publishOptions.stores"></select>
-           <div ng-init="rating = star.rating - 1"></div>
-           <div class="star-rating" star-rating rating-value="rating" data-max="5" on-rating-selected="rateFunction(rating)"></div>
-           </div>
+
            <input type="checkbox" ng-model="saveDraft" ng-true-value="'YES'" ng-false-value="'NO'">Save Draft
            <button ng-click="createPost()" class="submit-button">Submit</button>
        </div>

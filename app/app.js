@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : "http://backend.fit1.com/"
+            baseUrl : "http://fit.practo.local/"
         };
     });
 
@@ -45,6 +45,18 @@
             .when('/allcontent', {
                 controller: 'ContentController',
                 templateUrl: 'views/list/home.view.html',
+                desc : 'All Posts',
+                controllerAs: 'vm'
+            })
+            .when('/posts', {
+                controller: 'ContentController',
+                templateUrl: 'views/patient/post.list.html',
+                desc : 'All Posts',
+                controllerAs: 'vm'
+            })
+            .when('/modallpost', {
+                controller: 'ContentController',
+                templateUrl: 'views/admin/post.list.html',
                 desc : 'All Posts',
                 controllerAs: 'vm'
             })
@@ -87,6 +99,9 @@
                 templateUrl: 'views/content/insights.view.html',
                 controllerAs: 'vm'
             })
+            .when('/accessdenied', {
+                templateUrl: 'views/user/accessdenied.html'
+            })
 
             .otherwise({ redirectTo: '/login' });
 
@@ -117,10 +132,23 @@
             }
         });
 
-        $rootScope.$on('$routeChangeSuccess', function() {
+        $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
             $rootScope.desc = $route.current.desc;
+
+            /*var fullRoute = current.$route.originalPath,
+                routeParams = current.params,
+                resolvedRoute;
+
+
+            if((fullRoute == '/modpost/:postId' || fullRoute == '/modallpost') && $cookieStore.get("practoFitRole") != 'ADMIN')
+            {
+                $location.path('/accessdenied');
+            }
+
+            console.log(fullRoute);*/
+
         });
-        $rootScope.backendUrl = "http://backend.fit1.com/";
+        $rootScope.backendUrl = "http://fit.practo.local/";
         var fitToken = $cookieStore.get('fitToken');
         $http.defaults.headers.common['X-FIT-TOKEN'] = fitToken;
 

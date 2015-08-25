@@ -89,6 +89,23 @@ function GetNotificationController($scope, $http, FitGlobalService, $cookieStore
 
 apps.controller('LoginController', LoginController);
 function LoginController($scope, $location, $http, $cookieStore) {
+    alert("ff");
+
+        if($location.search().token != null && $location.search().uid != null && $location.search().role != null)
+        {
+            $cookieStore.put('fitToken', $location.search().token);
+            $cookieStore.put('practoFitRole', $location.search().role);
+            $cookieStore.put('practoAccountId', $location.search().uid);
+            if($location.search().role == 'DOCTOR'){
+                $location.url('/allcontent');
+            }
+            else if($location.search().role == 'ADMIN'){
+                $location.url('/modallpost');
+            }
+            else{
+                $location.url('/posts');
+            }
+        }
 
         $http.get($scope.backendUrl+'ulogin').success(function(data) {
 
@@ -96,15 +113,23 @@ function LoginController($scope, $location, $http, $cookieStore) {
         {
             var myEl = angular.element(document.querySelector('#form'));
             myEl.append(data);
-
             document.getElementById("openid_message").submit();
         }
         else
         {
             $cookieStore.put('fitToken', $location.search().token);
-            $cookieStore.put('practoFitRole', 'Doctor');
+            $cookieStore.put('practoFitRole', $location.search().role);
             $cookieStore.put('practoAccountId', $location.search().uid);
-            $location.url('/allcontent');
+            if($location.search().role == 'DOCTOR'){
+                $location.url('/allcontent');
+            }
+            else if($location.search().role == 'ADMIN'){
+                $location.url('/modallpost');
+            }
+            else{
+                $location.url('/posts');
+            }
+
         }
 
     });

@@ -37,7 +37,7 @@ var apps = angular
     })
 
 
-    apps.controller('ContentController', ContentController).directive('starRating', starRating);
+    apps.controller('ContentController', ContentController);
     function ContentController($scope, $http, $q, $cookieStore, FitGlobalService, $modal, $rootScope) {
 
         var role = $cookieStore.get('practoFitRole');
@@ -92,11 +92,7 @@ var apps = angular
             store: $scope.publishOptions.stores[0]
         };
 
-        $scope.rating = 5;
 
-        $scope.rateFunction = function(rating) {
-            console.log('Rating selected: ' + rating);
-        };
 
         $scope.openGuideline = function() {
 
@@ -255,7 +251,7 @@ var apps = angular
     }
 
     apps.controller('DeleteConfirmation', DeleteConfirmation);
-    function DeleteConfirmation($scope, $http, FitGlobalService, $cookieStore, $modalInstance, postId) {
+    function DeleteConfirmation($scope, $http, FitGlobalService, $cookieStore, $modalInstance, postId, $location) {
         var fitToken = $cookieStore.get('fitToken');
         var practoAccountId = $cookieStore.get('practoAccountId');
         $scope.delete = function(value) {
@@ -264,12 +260,18 @@ var apps = angular
                 var datax = { 'softDeleted' : 1,'practo_account_id':practoAccountId};
 
                 $http({
-                    method: 'PATCH',
+                    method: 'DELETE',
                     url: FitGlobalService.baseUrl+"posts/"+postId,
                     data: $.param(datax),
                     headers: {'X-FIT-TOKEN': fitToken, 'Content-Type': 'application/x-www-form-urlencoded'},
                 }).success(function () {
-                    $location.path('/allcontent');
+                    if($cookieStore.get("practoFitRole") != 'ADMIN'){
+                        $location.path('/allcontent');
+                    }
+                    else{
+                        $location.path('/modallpost');
+                    }
+
                 });
             }
             else
@@ -283,7 +285,7 @@ var apps = angular
 
     }
 
-    apps.controller('GetPostController', GetPostController);
+    apps.controller('GetPostController', GetPostController).directive('starRating', starRating);
 
     function GetPostController($scope, $http, $routeParams, FitGlobalService, $cookieStore, $modal, $location) {
         var postId = $routeParams.postId;
@@ -293,7 +295,7 @@ var apps = angular
         $http.get(FitGlobalService.baseUrl+'posts?practoAccountId='+practoAccountId+'&id='+postId).success(function(data){
             $scope.dataLoading = false;
             $scope.postData = data.postlist[0].postDetails;
-
+            $scope.rating = data.postlist[0].postDetails.contentRating;
             $scope.postContent = data.postlist[0].postDetails.contentTxt;
         });
 
@@ -319,6 +321,13 @@ var apps = angular
 
         }
 
+        $scope.rating = 5;
+
+        $scope.rateFunction = function(rating) {
+            $scope.rating = rating;
+
+        };
+
         $scope.approve = function(postId){
 
            var tag_arr = $scope.postData.tags;
@@ -328,7 +337,7 @@ var apps = angular
            }
            var tag_string_name = arr.join();
 
-           var imgUrl = 'dummy URL';
+            var imgUrl = $scope.postData.postUrl;
            var datax = { 'title' : $scope.postData.title,'practo_account_id':$scope.postData.practoAccountId,'content':$scope.postData.contentTxt,'publishStatus':'PUBLISHED','tagid':tag_string_name,'posturl':imgUrl};
 
            $http({
@@ -337,7 +346,7 @@ var apps = angular
                data: $.param(datax),
                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
            }).success(function () {
-               $location.path('/allcontent');
+               //$location.path('/allcontent');
            });
        }
        $scope.delete = function(postId){
@@ -354,11 +363,50 @@ var apps = angular
        $scope.edit = function(postId){
           $location.path('/content/'+postId);
        }
+       $scope.saveData = function(postId){
+
+           var tag_arr = $scope.postData.tags;
+           var arr = [];
+           for (var key in tag_arr) {
+               arr.push(tag_arr[key].id);
+           }
+           var tag_string_name = arr.join();
+
+           var imgUrl = $scope.postData.postUrl;
+           var datax = { 'title' : $scope.postData.title,'practo_account_id':$scope.postData.practoAccountId,'content':$scope.postData.contentTxt,'publishStatus':'PUBLISHED','tagid':tag_string_name,'posturl':imgUrl,'contentRating':$scope.rating};
+
+
+           $http({
+               method: 'PATCH',
+               url: FitGlobalService.baseUrl+"posts/"+postId,
+               data: $.param(datax),
+               headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+           }).success(function () {
+               $location.path('/allcontent');
+           });
+
+       }
     }
 
     apps.controller('GetAllPostController', GetAllPostController);
 
     function GetAllPostController($scope, $http, FitGlobalService, $cookieStore, $routeParams, $location, $modal) {
+
+        $scope.edit = function(postId){
+            $location.path('/content/'+postId);
+        }
+
+        $scope.delete = function(postId){
+            $modal.open({
+                controller: 'DeleteConfirmation',
+                templateUrl: 'views/content/confirmationBox.html',
+                resolve: {
+                    postId: function () {
+                        return postId;
+                    }
+                }
+            });
+        }
 
         var practoAccountId = $cookieStore.get('practoAccountId');
 
@@ -467,7 +515,7 @@ var apps = angular
 
     apps.controller('UpdateContentController', UpdateContentController);
 
-    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore, FitGlobalService, $window) {
+    function UpdateContentController($scope, $http, $routeParams, $location, $q, $cookieStore, FitGlobalService, $window, $modal) {
 
 
         $scope.loadTags = function(query) {
@@ -500,6 +548,20 @@ var apps = angular
 
         });
 
+        $scope.show = function(){
+            var modalInstance = $modal.open({
+                templateUrl: 'views/content/upload.html',
+                controller: 'UploadImageModalInstance',
+            }).result.then(
+                function (result) {
+                    console.log(result);
+                    $scope.image = result;
+                    $scope.imageDisplay = true;
+                }
+            );
+            return false;
+        };
+
         var role = $cookieStore.get('practoFitRole');
         var fitToken = $cookieStore.get('fitToken');
         $scope.role = false;
@@ -518,9 +580,9 @@ var apps = angular
             }
             var tag_string_name = arr.join();
 
-            var imgUrl = $scope.postImg;
+            var imgUrl = $scope.image;
 
-            console.log(imgUrl);
+           // console.log(imgUrl);
 
             if($scope.saveDraft == 'YES')
            {
