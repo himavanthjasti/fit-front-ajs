@@ -3,9 +3,20 @@
         <div class="col-lg-10 col-lg-offset-1">
             <div class="col-md-12" style="margin-left: -8px;">
                 Filter
-                <span class="mt15 floatleft navigation-span ml5"><input type="text" placeholder="Doctor name"></span>
-                <span class="mt15 floatleft navigation-span ml20"><input type="text" placeholder="Keyword name"></span>
-                <span class="mt15 floatleft navigation-span ml20"><input type="text" placeholder="modration Status name"></span>
+                <span class="mt15 floatleft navigation-span ml5">
+                    <!--<input type="text" placeholder="Doctor name">-->
+                    
+                    <input type="text" placeholder="Filter by doctor" ng-model="doctorFilter" 
+                    ng-change="filterPostsByDoctor()"/>
+                </span>
+                <span class="mt15 floatleft navigation-span ml20">
+                    <input type="text" placeholder="Filter by keyword" ng-model="keywordFilter" 
+                    ng-change="filterPostsByKeyword()"/>
+                </span>
+                <span class="mt15 floatleft navigation-span ml20">
+                    <input type="text" placeholder="Filter by status" ng-model="statusFilter" 
+                    ng-change="filterPostsByStatus()"/>
+                </span>
                 <hr class="clear mrminus15">
             </div>
 

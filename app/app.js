@@ -15,7 +15,7 @@
 
     angular.module('app').factory('FitGlobalService', function() {
         return {
-            baseUrl : "http://fit.practo.local/"
+            baseUrl : "http://backend.fit1.com/"
         };
     });
 
@@ -148,7 +148,7 @@
             console.log(fullRoute);*/
 
         });
-        $rootScope.backendUrl = "http://fit.practo.local/";
+        $rootScope.backendUrl = "http://backend.fit1.com/";
         var fitToken = $cookieStore.get('fitToken');
         $http.defaults.headers.common['X-FIT-TOKEN'] = fitToken;
 

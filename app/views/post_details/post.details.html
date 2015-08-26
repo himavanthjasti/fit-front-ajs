@@ -58,7 +58,19 @@
                     <div class="comments" ng-repeat="comment in postData.comments">
                         <div class="row mt15">
                             <div class="col-lg-2" style="margin-left: 5px; margin-right: -5px;">
-                                <img class="img-responsive img-circle" src="https://practo-fabric.s3.amazonaws.com/55bb61c4002b993d467bcaff0bec41709c89e9541885f.jpg" width="40" alt="">
+                                <div ng-switch on="{{comment.imageUrl}} || 'null'">
+                                    <div ng-switch-when="null">
+                                    <!-- code to render a large video block-->
+                                        <p>Hi</p>
+                                    </div>
+                                    <div ng-switch-default>
+                                    <!-- code to render the regular video block -->
+                                        <p>Hello!</p>
+                                    </div>
+                                </div>
+
+
+                                <img class="img-responsive img-circle" src="{{comment.imageUrl}}" width="40" alt="">
                             </div>
                             <div class="col-lg-8 paddingleftzero shdivsp" style="margin-left: -6.33333333%; margin-right: 6.33333333%">
                                 <p class="greysdark fw4 fs16">{{comment.name}}</p>

@@ -454,6 +454,41 @@ var apps = angular
             getAllPosts(url);
         }
 
+        $scope.filterPostsByDoctor = function(){
+            console.log('filtering by doctor: '+$scope.doctorFilter);
+            $scope.filterPosts();
+        };
+
+        $scope.filterPostsByKeyword = function() {
+            console.log('filtering by keyword: '+$scope.keywordFilter);
+            $scope.filterPosts();
+        };
+
+        $scope.filterPostsByStatus = function() {
+            console.log('filtering by status: '+$scope.statusFilter);
+            $scope.filterPosts();
+        };
+
+        $scope.filterPosts = function() {
+            var url = FitGlobalService.baseUrl+'posts?limit=2&page=1';
+            if($scope.doctorFilter){
+                url = url.concat('&doctorName='+$scope.doctorFilter);
+            }
+            if($scope.keywordFilter){
+                url = url.concat('&keyword='+$scope.keywordFilter);
+            }
+            if($scope.statusFilter){
+                url = url.concat('&publishStatus='+$scope.statusFilter);
+            }
+            console.log(url);
+            $http.get(url).success(function(data){
+                console.log(1);
+                console.log(data);
+                $scope.postList = data.postlist;
+            });
+            //&& $scope.statusFilter.length>2
+        };
+
         $scope.init = function () {
             var myEl = angular.element( document.querySelector( '#previousPost' ) );
             myEl.removeClass('sidebar-active');
